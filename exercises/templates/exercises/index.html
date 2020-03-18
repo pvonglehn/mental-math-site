@@ -9,6 +9,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'exercises/style.css' %}">
 </head>
 <body>
-    hello world
+    <p id="question"></p>
+    <div id="feedback">
+        <p id="correct-incorrect"></p>
+        <p id="your-answer"></p>
+        <p id="correct-answer"></p>
+        <p id="time-taken"></p>
+    </div>
+    <form id="myForm">
+        <label for="user-answer"></label>
+        <input id="user-answer" name="user-answer" type="number">
+        <input id="submit-answer" type="submit">
+    </form>
+    <button id="new-question">new question</button>
+    <script src="{% static 'exercises/script.js' %}"></script>
 </body>
 </html>
