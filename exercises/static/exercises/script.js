@@ -71,9 +71,7 @@ class Question {
             correctAnswer.innerHTML = `correct answer: ${this.answer}`;
         }
         timeTaken.innerHTML = `time taken: ${Math.round(this.duration * 10) / 10} seconds`;
-
     }
-
 }
 
 // document elements to be manipulated
@@ -87,6 +85,18 @@ const correctIncorrect = document.getElementById("correct-incorrect");
 const yourAnswer = document.getElementById("your-answer");
 const correctAnswer = document.getElementById("correct-answer");
 
+// Settings
+const settings = document.getElementById("settings");
+var showQuestion = document.getElementById("showQuestion");
+showQuestion.addEventListener("change", function(){
+    if (showQuestion.checked) {
+        question.style.visibility = "visible";
+    } else {
+        question.style.visibility = "hidden";
+    }
+})
+
+// create unassigned variable current_question
 var current_question;
 
 function cleanFeedback() {
@@ -95,7 +105,6 @@ function cleanFeedback() {
     correctAnswer.innerHTML = null;
     timeTaken.innerHTML = null;
 }
-
 
 // set visibility state
 myForm.style.visibility = "hidden";
@@ -107,6 +116,13 @@ newQuestionButton.addEventListener("click",function(){
     myForm.style.visibility = "visible";
     current_question = new Question();
     question.innerHTML = current_question.question;
+    if (settings.elements['readAloud'].checked){
+        if (settings.elements['speechRecognition'].checked){
+            responsiveVoice.speak(question.textContent,"UK English Male",{onend: speech_rec_function});
+        } else {
+            responsiveVoice.speak(question.textContent,"UK English Male");
+        }
+    }
     userAnswerBox.value = null;
     userAnswerBox.focus();
 })
@@ -120,3 +136,47 @@ myForm.addEventListener("submit",function(event){
     newQuestionButton.focus();
     
 })
+
+
+function speech_rec_function() {
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+    var grammar = '#JSGF V1.0;'
+
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    //recognition.continuous = false;
+    recognition.lang = 'en-UK';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+    console.log('Ready to receive speech');
+
+    recognition.onresult = function(event) {
+
+    var last = event.results.length - 1;
+    var number = event.results[last][0].transcript;
+
+    // input the answer
+    userAnswerBox.value = number;
+
+    // submit
+    document.getElementById("submit-answer").click();
+    
+
+    console.log('Confidence: ' + event.results[0][0].confidence);
+    }
+
+    recognition.onspeechend = function() {
+    recognition.stop();
+    }
+
+    recognition.onerror = function(event) {
+    diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+    }
+}

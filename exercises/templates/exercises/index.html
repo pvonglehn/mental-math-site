@@ -7,6 +7,9 @@
     {% load static %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'exercises/style.css' %}">
+
+    <!-- Text to speech script -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=fJ9jCR1s"></script>
 </head>
 <body>
     <p id="question"></p>
@@ -22,6 +25,19 @@
         <input id="submit-answer" type="submit">
     </form>
     <button id="new-question">new question</button>
+
+    <details>
+        <summary>settings</summary>
+    <form id="settings">
+        <label for="readAloud">read aloud</label>
+        <input id="readAloud" type="checkbox" name="readAloud">
+        <label for="showQuestion">show question</label>
+        <input id="showQuestion" type="checkbox" name="showQuestion" checked>
+        <label for="speechRecognition">speech recognition</label>
+        <input id="speechRecognition" type="checkbox" name="speechRecognition">
+    </form>
+    </details>
+
     <script src="{% static 'exercises/script.js' %}"></script>
 </body>
 </html>
