@@ -88,6 +88,8 @@ class Question {
     }
 }
 
+
+
 // document elements to be manipulated
 const newQuestionButton = document.getElementById("new-question");
 const question = document.getElementById("question");
@@ -109,6 +111,14 @@ showQuestion.addEventListener("change", function(){
         question.style.visibility = "hidden";
     }
 })
+
+// get parameters in URL (GET request parameters)
+const urlParams = new URLSearchParams(window.location.search);
+settings.elements.operator_name.value = urlParams.get('operator_name') || "addition";
+settings.elements.a_digits.value = urlParams.get('a_digits') || "1";
+settings.elements.b_digits.value = urlParams.get('b_digits') || "1";
+
+
 
 // create unassigned variable current_question
 var current_question;
