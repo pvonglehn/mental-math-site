@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['mental-math-env.eba-bef72peb.eu-west-2.elasticbeanstalk.com',
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'exercises.apps.ExercisesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +70,9 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'exercises:index'
+LOGOUT_REDIRECT_URL = 'exercises:index'
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
@@ -77,8 +81,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "mental_maths_app",
+        'USER': "mental_maths_app",
+        'PASSWORD': os.environ["DJANGO_DB_PASSWORD"],
+        'HOST': os.environ["DJANGO_DB_HOST"],
+        'PORT': "5432",
     }
 }
 

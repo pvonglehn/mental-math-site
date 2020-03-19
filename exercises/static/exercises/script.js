@@ -8,42 +8,54 @@ class Question {
     /**
     * Question class
     * Randomly generate a question
-    * @param  {String} operator operator e.g. + for addition
-    * @param  {Number} a_digit number of digits of operand a
+    * @param  {String} operator_name operator e.g. addition
+    * @param  {Number} a_digits number of digits of operand a
+    * @param  {Number} b_digits number of digits of operand a
     * @return {object} question returns a question object
     */
 
-    constructor (operator="+",a_digit=1,b_digit=1) {
+    constructor (operator_name,a_digits=1,b_digits=1) {
     // get function from operator string
     let operations = {
-        "+" : function (operand1, operand2) {
+        "addition" : function (operand1, operand2) {
             return operand1 + operand2;
         },
-        "-" : function (operand1, operand2) {
+        "subtraction" : function (operand1, operand2) {
             return operand1 - operand2;
+        },
+        "multiplication" : function (operand1, operand2) {
+            return operand1 * operand2;
         }
     };
+
+    let operator_names2symbols = {
+        "addition" : "+",
+        "subtraction" : "-",
+        "multiplication" : "&times;",
+        "division" : "&div;"
+    }
 
     // start time
     this.start = new Date().getTime()
 
-    this.operator = operator;
-    this.a_digit  = a_digit;
-    this.b_digit  = b_digit;
+    this.operator_name = operator_name;
+    this.operator_symbol = operator_names2symbols[operator_name];
+    this.a_digits  = a_digits;
+    this.b_digits  = b_digits;
 
     // set range for question
-    let a_min = Math.pow(10,this.a_digit - 1);
-    let a_max = Math.pow(10,this.a_digit) - 1;
-    let b_min = Math.pow(10,this.b_digit - 1);
-    let b_max = Math.pow(10,this.b_digit) - 1;
+    let a_min = Math.pow(10,this.a_digits - 1);
+    let a_max = Math.pow(10,this.a_digits) - 1;
+    let b_min = Math.pow(10,this.b_digits - 1);
+    let b_max = Math.pow(10,this.b_digits) - 1;
 
     // randomly generate operands
     this.a = getRandomInt(a_min, a_max);
     this.b = getRandomInt(b_min, b_max);
-    this.question = `${this.a} ${this.operator} ${this.b}`;
+    this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
 
     // calculate answer
-    this.answer = operations[this.operator](this.a,this.b);
+    this.answer = operations[this.operator_name](this.a,this.b);
 
     }
 
@@ -56,9 +68,11 @@ class Question {
 
     checkAnswer() {
         if (this.answer == this.user_answer) {
+            this.correct = true;
             return true;
         } else {
             return false;
+            this.correct = false;
         }
     }
 
@@ -74,11 +88,13 @@ class Question {
     }
 }
 
+
+
 // document elements to be manipulated
 const newQuestionButton = document.getElementById("new-question");
 const question = document.getElementById("question");
 const myForm = document.getElementById("myForm");
-const userAnswerBox = document.getElementById("user-answer");
+const userAnswerBox = document.getElementById("user_answer");
 const feedback_div = document.getElementById("feedback");
 const timeTaken = document.getElementById("time-taken");
 const correctIncorrect = document.getElementById("correct-incorrect");
@@ -95,6 +111,14 @@ showQuestion.addEventListener("change", function(){
         question.style.visibility = "hidden";
     }
 })
+
+// get parameters in URL (GET request parameters)
+const urlParams = new URLSearchParams(window.location.search);
+settings.elements.operator_name.value = urlParams.get('operator_name') || "addition";
+settings.elements.a_digits.value = urlParams.get('a_digits') || "1";
+settings.elements.b_digits.value = urlParams.get('b_digits') || "1";
+
+
 
 // create unassigned variable current_question
 var current_question;
@@ -114,7 +138,9 @@ newQuestionButton.addEventListener("click",function(){
     cleanFeedback();
     newQuestionButton.style.visibility = "hidden";
     myForm.style.visibility = "visible";
-    current_question = new Question();
+    current_question = new Question(operator_name=settings.elements.operator_name.value,
+                        a_digits=settings.elements.a_digits.value,
+                        b_digits=settings.elements.b_digits.value);
     question.innerHTML = current_question.question;
     if (settings.elements['readAloud'].checked){
         if (settings.elements['speechRecognition'].checked){
@@ -127,13 +153,52 @@ newQuestionButton.addEventListener("click",function(){
     userAnswerBox.focus();
 })
 
+
+function sendData(form) {
+    const XHR = new XMLHttpRequest();
+
+    // Bind the FormData object and the form element
+    const FD = new FormData( form );
+
+    // Define what happens on successful data submission
+    // XHR.addEventListener( "load", function(event) {
+    //   alert( event.target.responseText );
+    // } );
+
+    // Define what happens in case of error
+    // XHR.addEventListener( "error", function( event ) {
+    // alert( 'Oops! Something went wrong.' );
+    // } );
+
+    // Set up our request
+    XHR.open( "POST", "/submit_answer" );
+
+    // The data sent is what the user provided in the form
+    XHR.send( FD );
+}
+
+
 myForm.addEventListener("submit",function(event){
     event.preventDefault();
-    current_question.setUserAnswer(myForm.elements["user-answer"].value);
+    current_question.setUserAnswer(myForm.elements["user_answer"].value);
     current_question.feedback(feedback_div);
+
+    // fill in form to be sent to backend
+    myForm.elements.operator_name.value = current_question.operator_name;
+    myForm.elements.question.value = current_question.question;
+    myForm.elements.a_digits.value = current_question.a_digits;
+    myForm.elements.b_digits.value = current_question.b_digits;
+    myForm.elements.answer.value = current_question.answer;
+    myForm.elements.correct.value = current_question.correct;
+    myForm.elements.duration.value = current_question.duration;
+    
+    sendData(myForm);
+
+    // prepare for new question
     newQuestionButton.style.visibility = "visible";
     myForm.style.visibility = "hidden";
     newQuestionButton.focus();
+    
     
 })
 

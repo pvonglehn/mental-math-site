@@ -1,2 +1,5 @@
 Django==2.1.1
-pytz==2019.3
+djangorestframework==3.11.0
+numpy==1.17.4
+pandas==0.25.3
+psycopg2==2.8.4
