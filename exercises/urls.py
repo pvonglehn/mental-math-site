@@ -16,4 +16,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('set_targets', views.set_targets, name='set_targets'),
     path('submit_targets', views.submit_targets, name='submit_targets'),
+    path('statistics', views.statistics, name='statistics'),
 ]

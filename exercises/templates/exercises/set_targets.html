@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Mental Math{% endblock title %}
+
+{% block content %}  
+
 <div>    
     <table>
       <tr><th>operator name</th><th>a digits</th>
@@ -16,6 +21,7 @@
               <input type="hidden" name="b_digits" value={{ row.b_digits }}>
               <input class="small_input" type="submit" value="go">
             </form>
+            <td><a href="{% url 'exercises:statistics' %}?operator_name={{ row.operator_name}}&a_digits={{row.a_digits}}&b_digits={{row.b_digits}}">stats</a></td> 
             
         </td>
         </tr>
@@ -52,3 +58,5 @@
           
       </form>
   </p>
+
+{% endblock content %}

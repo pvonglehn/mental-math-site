@@ -1,0 +1,44 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mental Math {% endblock title %}</title>
+    
+    {% load static %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'exercises/style.css' %}">
+
+    <!-- Text to speech script -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=fJ9jCR1s"></script>
+</head>
+<body>
+
+    <header>
+        
+        <nav>
+            <ul>
+                <li><a href="{% url 'exercises:index' %}">exercises</a></li>
+                <li><a href="{% url 'exercises:set_targets' %}">daily targets</a></li>
+                <li><a id="stats-link" href="{% url 'exercises:statistics' %}">statistics</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">logout</a></li>
+                {% else %}    
+                    <li><a href="{% url 'login' %}">login</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <p>logged in as {{ user.username }}</p>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}
+
+    {% endblock content %}
+
+    </body>
+</html>

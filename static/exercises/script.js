@@ -89,7 +89,6 @@ class Question {
 }
 
 
-
 // document elements to be manipulated
 const newQuestionButton = document.getElementById("new-question");
 const question = document.getElementById("question");
@@ -118,7 +117,28 @@ settings.elements.operator_name.value = urlParams.get('operator_name') || "addit
 settings.elements.a_digits.value = urlParams.get('a_digits') || "1";
 settings.elements.b_digits.value = urlParams.get('b_digits') || "1";
 
+// update statistics link to reflect current settings
 
+function updateStatsLink() {
+    const statsLink = document.getElementById("stats-link")
+    let statsLinkUrl = statsLink.getAttribute("href")
+    let query = statsLinkUrl.indexOf('?');
+    if (query > 0) {
+        var statsLinkUrlNew = statsLinkUrl.substring(0, query);
+    } else {
+        var statsLinkUrlNew = statsLinkUrl;
+    }
+    statsLinkUrlNew = statsLinkUrlNew + "?" + "operator_name"  + "="  + settings.elements.operator_name.value
+                                    + "&" + "a_digits"  + "="  + settings.elements.a_digits.value
+                                    + "&" + "b_digits"  + "="  + settings.elements.b_digits.value
+    statsLink.setAttribute("href",statsLinkUrlNew)
+}
+updateStatsLink()
+const statsLink = document.getElementById("stats-link");
+statsLink.addEventListener("click",function(e){
+    e.preventDefault();
+    updateStatsLink()
+    window.location.href = this.getAttribute("href")});
 
 // create unassigned variable current_question
 var current_question;
@@ -148,9 +168,15 @@ newQuestionButton.addEventListener("click",function(){
         } else {
             responsiveVoice.speak(question.textContent,"UK English Male");
         }
+    } else {
+        if (settings.elements['speechRecognition'].checked) {
+            speech_rec_function();
+        }
     }
     userAnswerBox.value = null;
-    userAnswerBox.focus();
+    if (!settings.elements.speechRecognition.checked) {
+        userAnswerBox.focus();
+    }
 })
 
 
@@ -159,16 +185,6 @@ function sendData(form) {
 
     // Bind the FormData object and the form element
     const FD = new FormData( form );
-
-    // Define what happens on successful data submission
-    // XHR.addEventListener( "load", function(event) {
-    //   alert( event.target.responseText );
-    // } );
-
-    // Define what happens in case of error
-    // XHR.addEventListener( "error", function( event ) {
-    // alert( 'Oops! Something went wrong.' );
-    // } );
 
     // Set up our request
     XHR.open( "POST", "/submit_answer" );
