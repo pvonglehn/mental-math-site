@@ -1,3 +1,48 @@
 html, body {
-    color: green;
+    color: black;
+    margin-top: 2.2rem;
+    
+}
+
+.answer-feedback-area {
+    text-align: center;
+    height: 40vh;
+}
+
+#question-area {
+    text-align: center;
+    font-size: 3rem;
+    
+}
+
+.buttons, #user_answer {
+    height: 4rem;
+    width: 12rem;
+    font-size: 1.5rem;
+}
+
+#correct-incorrect {
+    font-size: 1.1 rem;
+    font-weight: bold;
+}
+
+#time-taken {
+    font-size: 0.75rem;
+    
+}
+
+input {
+    text-align: center;
+}
+
+#user_answer {
+    font-size: 2.4rem;
+}
+
+details {
+    margin-left: 0.4rem;
+}
+
+summary {
+    font-size: 1.2rem;
 }

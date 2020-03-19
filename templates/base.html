@@ -1,12 +1,13 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, , shrink-to-fit=no">
     <title>{% block title %}Mental Math {% endblock title %}</title>
+
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
     {% load static %}
 
@@ -18,27 +19,53 @@
 <body>
 
     <header>
-        
-        <nav>
-            <ul>
-                <li><a href="{% url 'exercises:index' %}">exercises</a></li>
-                <li><a href="{% url 'exercises:set_targets' %}">daily targets</a></li>
-                <li><a id="stats-link" href="{% url 'exercises:statistics' %}">statistics</a></li>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">MentalMath.site</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'exercises:index' %}">exercises <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link active" href="{% url 'exercises:set_targets' %}" >daily targets</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link active" id="stats-link" href="{% url 'exercises:statistics' %}">statistics</a></li>
+                </li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'logout' %}">logout</a></li>
-                {% else %}    
-                    <li><a href="{% url 'login' %}">login</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stats-link" href="{% url 'logout' %}">logout</a></li>
+                    </li>
+                {% else %} 
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stats-link" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
+                    </li>   
                 {% endif %}
                 {% if user.is_authenticated %}
-                    <p>logged in as {{ user.username }}</p>
+                    <li class="nav-item">
+                        <p class="nav-link active">logged in as {{ user.username }}</p>
+                    </li>  
                 {% endif %}
             </ul>
+            
+            </div>
         </nav>
     </header>
 
-    {% block content %}
+    <main>
+        {% block content %}
 
-    {% endblock content %}
+        {% endblock content %}
+    </main>
 
+    <!-- required scripts for bootstrap begin -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- required scripts for bootstrap end-->
     </body>
 </html>

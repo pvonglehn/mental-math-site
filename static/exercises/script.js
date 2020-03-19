@@ -150,14 +150,35 @@ function cleanFeedback() {
     timeTaken.innerHTML = null;
 }
 
+myFormHeight = getComputedStyle(myForm).height;
+const feedback = document.getElementById("feedback")
+feedbackHeight = getComputedStyle(feedback).height;
+
+function toggleState(state) {
+    if (state == "active"){
+        newQuestionButton.style.visibility = "hidden";
+        feedback.style.height = "0";
+        myForm.style.visibility = "visible";
+        myForm.style.height = myFormHeight;
+        
+    } else {
+        myForm.style.visibility = "hidden";
+        myForm.style.height = "0";
+        newQuestionButton.style.visibility = "visible";
+        feedback.style.height = feedbackHeight;
+    }
+}
+
 // set visibility state
-myForm.style.visibility = "hidden";
+// myForm.style.visibility = "hidden";
 newQuestionButton.focus();
+toggleState("inactive")
 
 newQuestionButton.addEventListener("click",function(){
     cleanFeedback();
-    newQuestionButton.style.visibility = "hidden";
-    myForm.style.visibility = "visible";
+    // newQuestionButton.style.visibility = "hidden";
+    // myForm.style.visibility = "visible";
+    toggleState("active")
     current_question = new Question(operator_name=settings.elements.operator_name.value,
                         a_digits=settings.elements.a_digits.value,
                         b_digits=settings.elements.b_digits.value);
@@ -211,8 +232,9 @@ myForm.addEventListener("submit",function(event){
     sendData(myForm);
 
     // prepare for new question
-    newQuestionButton.style.visibility = "visible";
-    myForm.style.visibility = "hidden";
+    // newQuestionButton.style.visibility = "visible";
+    // myForm.style.visibility = "hidden";
+    toggleState("inactive")
     newQuestionButton.focus();
     
     

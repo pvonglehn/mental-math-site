@@ -2,19 +2,37 @@
 {% block title %}Mental Math{% endblock title %}
 
 {% block content %}  
-
-    <p id="question"></p>
-    <div id="feedback">
-        <p id="correct-incorrect"></p>
-        <p id="your-answer"></p>
-        <p id="correct-answer"></p>
-        <p id="time-taken"></p>
-    </div>
-    <form id="myForm">
-        {% csrf_token %}
-        <label for="user_answer"></label>
-        <input id="user_answer" name="user_answer" type="number">
-        <input id="submit-answer" type="submit">
+<details>
+    <summary>settings</summary>
+<form id="settings">
+    <ul>
+        <li>
+        <label for="operator_name">exercise</label>
+        <select id = "operator_name" name="operator_name">
+            <option value = "addition">addition</option>
+            <option value = "subtraction">subtraction</option>
+            <option value = "multiplication">multiplication</option>
+        </select></li>
+        <li><label for="a_digits"># digits left</label>
+        <input name="a_digits" type="number" min="1" max="15" value="1"></li>
+        <li><label for="b_digits"># digits right</label>
+        <input name="b_digits" type="number" min="1" max="15" value="1"></li>
+        <li><label for="readAloud">read aloud</label>
+        <input id="readAloud" type="checkbox" name="readAloud"></li>
+        <li><label for="showQuestion">show question</label>
+        <input id="showQuestion" type="checkbox" name="showQuestion" checked></li>
+        <li><label for="speechRecognition">speech recognition</label>
+        <input id="speechRecognition" type="checkbox" name="speechRecognition"></li>
+    </ul>
+</form>
+</details>
+    <div id="question-area">
+        <p id="question"></p>
+    </div> 
+    <form class="answer-feedback-area" id="myForm">
+        {% csrf_token %}    
+        <p><input id="user_answer" name="user_answer" type="number"></p>
+        <input class="buttons" id="submit-answer" type="submit">
         <input type="hidden" name="operator_name"  > 
         <input type="hidden" name="a_digits"       >   
         <input type="hidden" name="b_digits"       >
@@ -24,33 +42,15 @@
         <input type="hidden" name="username" value="{{ user.username }}" >
         <input type="hidden" name="duration"       >
     </form>
-    <button id="new-question">new question</button>
+    <div class="answer-feedback-area" id="feedback">
+        <p id="correct-incorrect"></p>
+        <p id="your-answer"></p>
+        <p id="correct-answer"></p>
+        <p id="time-taken"></p>
+        <button class="buttons" id="new-question">new question</button>
+    </div>
 
-    <details>
-        <summary>settings</summary>
-    <form id="settings">
-        
-        <ul>
-            <li>
-            <label for="operator_name">exercise</label>
-            <select id = "operator_name" name="operator_name">
-                <option value = "addition">addition</option>
-                <option value = "subtraction">subtraction</option>
-                <option value = "multiplication">multiplication</option>
-            </select></li>
-            <li><label for="a_digits"># digits left</label>
-            <input name="a_digits" type="number" min="1" max="15" value="1"></li>
-            <li><label for="b_digits"># digits right</label>
-            <input name="b_digits" type="number" min="1" max="15" value="1"></li>
-            <li><label for="readAloud">read aloud</label>
-            <input id="readAloud" type="checkbox" name="readAloud"></li>
-            <li><label for="showQuestion">show question</label>
-            <input id="showQuestion" type="checkbox" name="showQuestion" checked></li>
-            <li><label for="speechRecognition">speech recognition</label>
-            <input id="speechRecognition" type="checkbox" name="speechRecognition"></li>
-        </ul>
-    </form>
-    </details>
+
 
     {% load static %}
     <script src="{% static 'exercises/script.js' %}"></script>
