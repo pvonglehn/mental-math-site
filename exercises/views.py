@@ -17,6 +17,9 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 
+from django.http import JsonResponse
+from django.db.models import Sum
+
 operator_list = ["multiplication",
                 "addition",
                 "division with decimal",
@@ -348,3 +351,39 @@ def statistics(request):
     return HttpResponse(template.render(context, request))  
 
 
+
+
+def get_daily_stats(request):
+
+    username = request.GET.get("username")
+    operator_name = request.GET.get("operator_name")
+    a_digits = request.GET.get("a_digits")
+    b_digits = request.GET.get("b_digits")
+
+    qset = Question.objects.filter(username=username,
+                                       operator_name=operator_name,
+                                       a_digits=a_digits,
+                                       b_digits=b_digits,
+                                       date_created__date=timezone.now()
+                                       )
+
+    correct = qset.filter(correct=True).count()
+    total = qset.count()
+    total_duration = qset.aggregate(Sum('duration'))['duration__sum'] or 0
+
+    try:
+        daily_target = Target.objects.get(operator_name=operator_name
+                                        ,username=username
+                                        ,a_digits=a_digits
+                                        ,b_digits=b_digits).daily_target
+    except:
+        daily_target = 0
+
+    data = {
+        'correct': correct,
+        'total': total,
+        'total_duration': total_duration,
+        'daily_target': daily_target
+    }
+
+    return JsonResponse(data)

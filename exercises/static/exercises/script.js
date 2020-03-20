@@ -11,10 +11,11 @@ class Question {
     * @param  {String} operator_name operator e.g. addition
     * @param  {Number} a_digits number of digits of operand a
     * @param  {Number} b_digits number of digits of operand a
+    * @param  {String} username
     * @return {object} question returns a question object
     */
 
-    constructor (operator_name,a_digits=1,b_digits=1) {
+    constructor (operator_name,a_digits=1,b_digits=1,username) {
     // get function from operator string
     let operations = {
         "addition" : function (operand1, operand2) {
@@ -26,6 +27,7 @@ class Question {
         "multiplication" : function (operand1, operand2) {
             return operand1 * operand2;
         }
+        
     };
 
     let operator_names2symbols = {
@@ -42,21 +44,38 @@ class Question {
     this.operator_symbol = operator_names2symbols[operator_name];
     this.a_digits  = a_digits;
     this.b_digits  = b_digits;
+    this.username  = username;
 
     // set range for question
-    let a_min = Math.pow(10,this.a_digits - 1);
+    let a_min = Math.pow(10,this.a_digits - 1) + 1;
     let a_max = Math.pow(10,this.a_digits) - 1;
-    let b_min = Math.pow(10,this.b_digits - 1);
+    let b_min = Math.pow(10,this.b_digits - 1) + 1;
     let b_max = Math.pow(10,this.b_digits) - 1;
 
-    // randomly generate operands
-    this.a = getRandomInt(a_min, a_max);
-    this.b = getRandomInt(b_min, b_max);
-    this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
+    if (this.operator_name == "division") {
 
-    // calculate answer
-    this.answer = operations[this.operator_name](this.a,this.b);
+        // first do multiplication and then swap the answer and
+        // randomly generate operands
+        this.a = getRandomInt(a_min, a_max);
+        this.b = getRandomInt(b_min, b_max);
+        
 
+        // calculate answer
+        let tmp = operations["multiplication"](this.a,this.b);
+        this.answer = this.a;
+        this.a = tmp;
+
+        this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
+
+    } else {
+        // randomly generate operands
+        this.a = getRandomInt(a_min, a_max);
+        this.b = getRandomInt(b_min, b_max);
+        this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
+
+        // calculate answer
+        this.answer = operations[this.operator_name](this.a,this.b);
+        }
     }
 
     // add answer
@@ -71,8 +90,9 @@ class Question {
             this.correct = true;
             return true;
         } else {
-            return false;
+            
             this.correct = false;
+            return false;
         }
     }
 
@@ -88,6 +108,124 @@ class Question {
     }
 }
 
+// daily stats (only active if user is signed in)
+class DailyStats {
+    /**
+ 
+    */
+
+        calculate_derived() {
+            this.incorrect = this.total - this.correct;
+            this.mean_duration = this.total_duration / this.total;
+            this.accuracy = 100*(this.correct/this.total);
+        }
+
+        updateFromServer() {
+            let xhttp = new XMLHttpRequest();
+            var ds = this;
+            xhttp.onreadystatechange=function() {
+                if (this.readyState == 4 && this.status == 200) {
+                 
+                    let response_json = JSON.parse(this.responseText)
+                    ds.correct = response_json.correct;
+                    ds.total = response_json.total;
+                    ds.total_duration = response_json.total_duration;
+                    ds.daily_target = response_json.daily_target;
+                    ds.calculate_derived();
+                    ds.updateTable();
+                }
+            };
+            xhttp.open("GET","/get_daily_stats?" 
+                            + "operator_name=" + this.operator_name
+                            + "&a_digits=" + this.a_digits
+                            + "&b_digits=" + this.b_digits
+                            + "&username="  + this.username);
+            xhttp.send();
+            
+        }
+
+        constructor(operator_name,a_digits,b_digits,username) {
+        
+            this.operator_name = operator_name;
+            this.a_digits = a_digits;
+            this.b_digits = b_digits;
+            this.username = username;
+            this.correct = 0;
+            this.updateFromServer();
+            this.calculate_derived();
+            this.updateTable();
+            
+
+        };
+
+        reset() {
+            this.correct = 0;
+            this.incorrect = 0;
+            this.total
+            this.total_duration = 0;
+            this.accuracy = 0;
+            this.mean_duration = 0;   
+                   
+        }
+
+        set_params(question) {
+            this.operator_name  = question.operator_name;
+            this.a_digits       = question.a_digits;
+            this.b_digits       = question.b_digits;
+            this.username       = question.username ;      
+        }
+
+
+
+        updateTable() {
+            document.getElementById("n_correct").innerHTML = this.correct;
+            document.getElementById("n_incorrect").innerHTML = this.incorrect;
+            if (!Number.isNaN(this.mean_duration)) {
+                
+                document.getElementById("daily_average_duration").innerHTML = this.mean_duration.toFixed(1) + " seconds";
+            } else {
+                document.getElementById("daily_average_duration").innerHTML = "";
+            }
+            if (!Number.isNaN(this.accuracy)) {
+                
+                document.getElementById("daily_accuracy").innerHTML = this.accuracy.toFixed(1) + "%";
+            } else {
+                document.getElementById("daily_accuracy").innerHTML = "";
+            }           
+            
+            document.getElementById("daily_target").innerHTML = this.daily_target;
+
+            document.getElementById('daily_stats_heading').innerHTML = "daily stats: " 
+                                                                + this.operator_name 
+                                                                + " " + this.a_digits 
+                                                                + " by " + this.b_digits
+        }
+
+        update(question) {
+            if (question.username == "") {
+                return null;
+            }  
+
+            if (!(question.operator_name === this.operator_name
+               && question.a_digits == this.a_digits
+               && question.b_digits == this.b_digits
+               && question.username == this.username)) {
+                   this.reset();
+                   this.set_params(question);
+               }
+
+            if (question.correct == true) {
+                ++this.correct;
+            }
+
+            ++this.total;            
+            this.total_duration += question.duration;
+            this.mean_duration = this.total_duration / this.total;
+            this.accuracy = 100*(this.correct / this.total);
+            this.updateTable();
+
+        }
+    }
 
 // document elements to be manipulated
 const newQuestionButton = document.getElementById("new-question");
@@ -100,6 +238,9 @@ const correctIncorrect = document.getElementById("correct-incorrect");
 const yourAnswer = document.getElementById("your-answer");
 const correctAnswer = document.getElementById("correct-answer");
 
+
+
+
 // Settings
 const settings = document.getElementById("settings");
 var showQuestion = document.getElementById("showQuestion");
@@ -111,11 +252,55 @@ showQuestion.addEventListener("change", function(){
     }
 })
 
+document.getElementById("update_settings").addEventListener("click",function(e){
+    
+        e.preventDefault();
+        
+        // only if user is signed in
+        if (username) {
+            window.ds = new DailyStats(settings.elements.operator_name.value,
+            settings.elements.a_digits.value,
+            settings.elements.b_digits.value,
+            myForm.elements.username.value);
+        }
+        cleanFeedback()
+
+        document.getElementById('settings_drop_down').removeAttribute("open");
+        document.getElementById('exercise-type').innerHTML = settings.elements.operator_name.value 
+                                                    + "<br />"
+                                                    + " " + settings.elements.a_digits.value 
+                                                    + " by " + settings.elements.b_digits.value
+        document.getElementById('exercise-type').style.display = "block";
+})
+
+
+
+
+
+
+
+
 // get parameters in URL (GET request parameters)
 const urlParams = new URLSearchParams(window.location.search);
 settings.elements.operator_name.value = urlParams.get('operator_name') || "addition";
 settings.elements.a_digits.value = urlParams.get('a_digits') || "1";
 settings.elements.b_digits.value = urlParams.get('b_digits') || "1";
+
+document.getElementById("update_settings").click();
+
+var username = myForm.elements.username.value;
+var operator_name = settings.elements.operator_name.value;
+var a_digits = settings.elements.a_digits.value;
+var b_digits = settings.elements.b_digits.value;
+
+if (username) {
+    var ds = new DailyStats(operator_name,
+                        a_digits,
+                        b_digits,
+                        username);
+
+    const dailyStatsTable = document.getElementById("dailyStatsTable");
+}
 
 // update statistics link to reflect current settings
 
@@ -144,6 +329,7 @@ statsLink.addEventListener("click",function(e){
 var current_question;
 
 function cleanFeedback() {
+    question.innerHTML = null;
     correctIncorrect.innerHTML = null;
     yourAnswer.innerHTML = null;
     correctAnswer.innerHTML = null;
@@ -156,16 +342,22 @@ feedbackHeight = getComputedStyle(feedback).height;
 
 function toggleState(state) {
     if (state == "active"){
-        newQuestionButton.style.visibility = "hidden";
-        feedback.style.height = "0";
-        myForm.style.visibility = "visible";
-        myForm.style.height = myFormHeight;
-        
+        // newQuestionButton.style.visibility = "hidden";
+        // feedback.style.height = "0";
+        // myForm.style.visibility = "visible";
+        // myForm.style.height = myFormHeight;
+        feedback.style.display = "none";
+        // myForm.style.display = "block";
+        document.getElementById('input-area').style.display = "block";
+
     } else {
-        myForm.style.visibility = "hidden";
-        myForm.style.height = "0";
-        newQuestionButton.style.visibility = "visible";
-        feedback.style.height = feedbackHeight;
+        // myForm.style.visibility = "hidden";
+        // myForm.style.height = "0";
+        // newQuestionButton.style.visibility = "visible";
+        // feedback.style.height = feedbackHeight;
+        feedback.style.display = "block";
+        // myForm.style.display = "none";
+        document.getElementById('input-area').style.display = "none";
     }
 }
 
@@ -175,13 +367,16 @@ newQuestionButton.focus();
 toggleState("inactive")
 
 newQuestionButton.addEventListener("click",function(){
+    document.getElementById("exercise-type").style.display = "none";
     cleanFeedback();
     // newQuestionButton.style.visibility = "hidden";
     // myForm.style.visibility = "visible";
     toggleState("active")
     current_question = new Question(operator_name=settings.elements.operator_name.value,
                         a_digits=settings.elements.a_digits.value,
-                        b_digits=settings.elements.b_digits.value);
+                        b_digits=settings.elements.b_digits.value,
+                        username=myForm.elements.username.value);
+
     question.innerHTML = current_question.question;
     if (settings.elements['readAloud'].checked){
         if (settings.elements['speechRecognition'].checked){
@@ -230,6 +425,10 @@ myForm.addEventListener("submit",function(event){
     myForm.elements.duration.value = current_question.duration;
     
     sendData(myForm);
+
+    // update daily stats (if ds exists)
+    ds && ds.update(current_question);
+
 
     // prepare for new question
     // newQuestionButton.style.visibility = "visible";
@@ -283,3 +482,5 @@ function speech_rec_function() {
     diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
     }
 }
+
+

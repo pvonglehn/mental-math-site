@@ -17,4 +17,5 @@ urlpatterns = [
     path('set_targets', views.set_targets, name='set_targets'),
     path('submit_targets', views.submit_targets, name='submit_targets'),
     path('statistics', views.statistics, name='statistics'),
+    path('get_daily_stats', views.get_daily_stats, name='get_daily_stats'),   
 ]

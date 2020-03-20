@@ -6,13 +6,19 @@ html, body {
 
 .answer-feedback-area {
     text-align: center;
-    height: 40vh;
+    min-height: 12rem;
+    border: solid 1px white;
+    /* padding-bottom:1rem; */
+   
 }
 
 #question-area {
     text-align: center;
     font-size: 3rem;
-    
+}
+
+#exercise-type {
+    font-size: 2rem;
 }
 
 .buttons, #user_answer {
@@ -22,12 +28,12 @@ html, body {
 }
 
 #correct-incorrect {
-    font-size: 1.1 rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
 #time-taken {
-    font-size: 0.75rem;
+    font-size: 1rem;
     
 }
 
@@ -45,4 +51,36 @@ details {
 
 summary {
     font-size: 1.2rem;
+}
+
+.fc {
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+@media only screen and (min-width: 600px) {
+    .fc-pc > * {
+        margin-left:2em;
+        margin-right:2em
+    }
+
+    .fc-pc {
+        display:flex;
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+}
+
+table {
+    font-size:0.9rem;
+    line-height: 1;
+
+}
+
+
+img {
+    flex: 1;
+    max-width:500px;
+    margin-top:2rem;
 }

@@ -3,11 +3,14 @@
 
 {% block content %} 
 
-<img src="data:image/png;base64,{{weekly_duration}}" alt="weekly accuracy" width="100%" height=auto />
+<div class="fc">
 
-<img src="data:image/png;base64,{{weekly_accuracy}}" alt="weekly accuracy" width="100%" height=auto />
+    <img src="data:image/png;base64,{{weekly_duration}}" alt="weekly accuracy" width="100%" height=auto />
 
-<img src="data:image/png;base64,{{image_base64}}" alt="duration stats" width="100%" height=auto />
+    <img src="data:image/png;base64,{{weekly_accuracy}}" alt="weekly accuracy" width="100%" height=auto />
 
+    <img src="data:image/png;base64,{{image_base64}}" alt="duration stats" width="100%" height=auto />
+
+</div>
 
 {% endblock content %}
