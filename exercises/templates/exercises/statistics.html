@@ -3,14 +3,22 @@
 
 {% block content %} 
 
-<div class="fc">
+    {% if user.is_authenticated %}
 
-    <img src="data:image/png;base64,{{weekly_duration}}" alt="weekly accuracy" width="100%" height=auto />
+        <div class="fc">
 
-    <img src="data:image/png;base64,{{weekly_accuracy}}" alt="weekly accuracy" width="100%" height=auto />
+            <img src="data:image/png;base64,{{weekly_duration}}" alt="weekly accuracy" width="100%" height=auto />
 
-    <img src="data:image/png;base64,{{image_base64}}" alt="duration stats" width="100%" height=auto />
+            <img src="data:image/png;base64,{{weekly_accuracy}}" alt="weekly accuracy" width="100%" height=auto />
 
-</div>
+            <img src="data:image/png;base64,{{image_base64}}" alt="duration stats" width="100%" height=auto />
+
+        </div>
+
+    {% else %}
+
+        <h3><a href="{% url 'exercises:signup' %}"><span>sign up</span></a> to set targets and track you stats</h3>
+
+    {% endif %}
 
 {% endblock content %}

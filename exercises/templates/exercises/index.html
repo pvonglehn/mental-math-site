@@ -17,10 +17,16 @@
                         <option value = "multiplication">multiplication</option>
                         <option value = "division">division</option>
                     </select></li>
-                    <li><label for="a_digits"># digits left</label>
-                    <input name="a_digits" type="number" min="1" max="15" value="1"></li>
-                    <li><label for="b_digits"># digits right</label>
-                    <input name="b_digits" type="number" min="1" max="15" value="1"></li>
+                    <li>
+                        <label for="a_digits"># digits left <button id="a_digits_dec">-</button></label>
+                        <input id="a_digits" name="a_digits" type="number" min="1" max="15" value="1" step="1">
+                        <button id="a_digits_inc">+</button>
+                    </li>
+                    <li>
+                        <label for="b_digits"># digits left <button id="b_digits_dec">-</button></label>
+                        <input id="b_digits" name="b_digits" type="number" min="1" max="15" value="1" step="1">
+                        <button id="b_digits_inc">+</button>
+                    </li>
                     <li><label for="readAloud">read aloud</label>
                     <input id="readAloud" type="checkbox" name="readAloud"></li>
                     <li><label for="showQuestion">show question</label>
@@ -66,35 +72,35 @@
             </div>
         </div>
         <div>
-            {% if user.is_authenticated %}
-                <table id="dailyStatsTable" class="table table-bordered">
-                    <thead class="thead-dark">
-                        <tr><th id="daily_stats_heading" scope="col" colspan="2" >daily stats</th></tr>
-                    </thead>
-                    <tr>
-                        <th scope="row">correct</th>
-                        <td id="n_correct"></td>
-                    </tr>
-                        <tr>    
-                            <th scope="row">target</th>
-                            <td id="daily_target"></td>
-                        </tr>     
-                    <tr>
-                        <th scope="row">incorrect</th>
-                        <td id="n_incorrect"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">accuracy</th>
-                        <td id="daily_accuracy"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">time per question </th>
-                        <td id="daily_average_duration"></td>
-                    </tr>
-                </table>
+            
+            <table id="dailyStatsTable" class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr><th id="daily_stats_heading" scope="col" colspan="2" >daily stats</th></tr>
+                </thead>
+                <tr>
+                    <th scope="row">correct</th>
+                    <td id="n_correct"></td>
+                </tr>
+                    <tr>    
+                        <th scope="row">target</th>
+                        <td id="daily_target"></td>
+                    </tr>     
+                <tr>
+                    <th scope="row">incorrect</th>
+                    <td id="n_incorrect"></td>
+                </tr>
+                <tr>
+                    <th scope="row">accuracy</th>
+                    <td id="daily_accuracy"></td>
+                </tr>
+                <tr>
+                    <th scope="row">time per question </th>
+                    <td id="daily_average_duration"></td>
+                </tr>
+            </table>
 
                 
-            {% endif %}
+            
         </div>
     </main>
 

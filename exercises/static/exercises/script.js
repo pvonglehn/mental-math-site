@@ -121,26 +121,33 @@ class DailyStats {
         }
 
         updateFromServer() {
-            let xhttp = new XMLHttpRequest();
-            var ds = this;
-            xhttp.onreadystatechange=function() {
-                if (this.readyState == 4 && this.status == 200) {
-                 
-                    let response_json = JSON.parse(this.responseText)
-                    ds.correct = response_json.correct;
-                    ds.total = response_json.total;
-                    ds.total_duration = response_json.total_duration;
-                    ds.daily_target = response_json.daily_target;
-                    ds.calculate_derived();
-                    ds.updateTable();
-                }
-            };
-            xhttp.open("GET","/get_daily_stats?" 
-                            + "operator_name=" + this.operator_name
-                            + "&a_digits=" + this.a_digits
-                            + "&b_digits=" + this.b_digits
-                            + "&username="  + this.username);
-            xhttp.send();
+
+            if (username == "") {
+                this.reset();
+                
+            } else {
+
+                let xhttp = new XMLHttpRequest();
+                var ds = this;
+                xhttp.onreadystatechange=function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    
+                        let response_json = JSON.parse(this.responseText)
+                        ds.correct = response_json.correct;
+                        ds.total = response_json.total;
+                        ds.total_duration = response_json.total_duration;
+                        ds.daily_target = response_json.daily_target;
+                        ds.calculate_derived();
+                        ds.updateTable();
+                    }
+                };
+                xhttp.open("GET","/get_daily_stats?" 
+                                + "operator_name=" + this.operator_name
+                                + "&a_digits=" + this.a_digits
+                                + "&b_digits=" + this.b_digits
+                                + "&username="  + this.username);
+                xhttp.send();
+            }
             
         }
 
@@ -161,7 +168,7 @@ class DailyStats {
         reset() {
             this.correct = 0;
             this.incorrect = 0;
-            this.total
+            this.total = 0;
             this.total_duration = 0;
             this.accuracy = 0;
             this.mean_duration = 0;   
@@ -202,9 +209,7 @@ class DailyStats {
         }
 
         update(question) {
-            if (question.username == "") {
-                return null;
-            }  
+            
 
             if (!(question.operator_name === this.operator_name
                && question.a_digits == this.a_digits
@@ -219,9 +224,10 @@ class DailyStats {
             }
 
             ++this.total;            
-            this.total_duration += question.duration;
-            this.mean_duration = this.total_duration / this.total;
-            this.accuracy = 100*(this.correct / this.total);
+            // this.total_duration += question.duration;
+            // this.mean_duration = this.total_duration / this.total;
+            // this.accuracy = 100*(this.correct / this.total);
+            this.calculate_derived();
             this.updateTable();
 
         }
@@ -256,13 +262,12 @@ document.getElementById("update_settings").addEventListener("click",function(e){
     
         e.preventDefault();
         
-        // only if user is signed in
-        if (username) {
-            window.ds = new DailyStats(settings.elements.operator_name.value,
-            settings.elements.a_digits.value,
-            settings.elements.b_digits.value,
-            myForm.elements.username.value);
-        }
+        // fetch daily stats from server
+        window.ds = new DailyStats(settings.elements.operator_name.value,
+        settings.elements.a_digits.value,
+        settings.elements.b_digits.value,
+        myForm.elements.username.value);
+        
         cleanFeedback()
 
         document.getElementById('settings_drop_down').removeAttribute("open");
@@ -274,9 +279,35 @@ document.getElementById("update_settings").addEventListener("click",function(e){
 })
 
 
+// increment and decrement number of a digits
+document.getElementById('a_digits_dec').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('a_digits').value ;
+    if (current_value > 1) {
+        document.getElementById('a_digits').value = parseInt(current_value) - 1;
+    }
+})
 
+document.getElementById('a_digits_inc').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('a_digits').value;
+    document.getElementById('a_digits').value = parseInt(current_value) + 1;
+})
 
+// increment and decrement number of b digits
+document.getElementById('b_digits_dec').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('b_digits').value ;
+    if (current_value > 1) {
+        document.getElementById('b_digits').value = parseInt(current_value) - 1;
+    }
+})
 
+document.getElementById('b_digits_inc').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('b_digits').value;
+    document.getElementById('b_digits').value = parseInt(current_value) + 1;
+})
 
 
 
@@ -293,14 +324,14 @@ var operator_name = settings.elements.operator_name.value;
 var a_digits = settings.elements.a_digits.value;
 var b_digits = settings.elements.b_digits.value;
 
-if (username) {
-    var ds = new DailyStats(operator_name,
-                        a_digits,
-                        b_digits,
-                        username);
 
-    const dailyStatsTable = document.getElementById("dailyStatsTable");
-}
+var ds = new DailyStats(operator_name,
+                    a_digits,
+                    b_digits,
+                    username);
+
+const dailyStatsTable = document.getElementById("dailyStatsTable");
+
 
 // update statistics link to reflect current settings
 

@@ -20,6 +20,8 @@ import base64
 from django.http import JsonResponse
 from django.db.models import Sum
 
+from django.contrib.auth.forms import UserCreationForm
+
 operator_list = ["multiplication",
                 "addition",
                 "division with decimal",
@@ -387,3 +389,23 @@ def get_daily_stats(request):
     }
 
     return JsonResponse(data)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('exercises:index')
+    else:
+        form = UserCreationForm()
+
+    template = loader.get_template('exercises/signup.html')
+
+    context = {'form': form}
+
+    return HttpResponse(template.render(context, request))

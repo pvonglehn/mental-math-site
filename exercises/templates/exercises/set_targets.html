@@ -3,60 +3,67 @@
 
 {% block content %}  
 
-<div>    
-    <table>
-      <tr><th>operator name</th><th>a digits</th>
-      <th>b digits</th><th>daily target</th>
-      <th>target met</th>
-      </tr>
-      {% for index, row in df.iterrows %}
-        <tr>
-        <td>{{ row.operator_name}}</td> <td>{{ row.a_digits }}</td> 
-        <td>{{ row.b_digits }}</td> <td>{{ row.daily_target }}</td>
-        <td>{{ row.target_met }}</td>
-        <td>
-            <form id={{ forloop.counter}} class="go_to_exercise" action="{% url 'exercises:index' %}" method="GET">
-              <input type="hidden" name="operator_name" value="{{ row.operator_name }}">
-              <input type="hidden" name="a_digits" value={{ row.a_digits }}>
-              <input type="hidden" name="b_digits" value={{ row.b_digits }}>
-              <input class="small_input" type="submit" value="go">
-            </form>
-            <td><a href="{% url 'exercises:statistics' %}?operator_name={{ row.operator_name}}&a_digits={{row.a_digits}}&b_digits={{row.b_digits}}">stats</a></td> 
-            
-        </td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
-  <p>
-    <form id="add_targets" class="settings" action="{% url 'exercises:submit_targets' %}" method="POST">
-        {% csrf_token %}
-        <fieldset>
-            <legend>Set New Daily Targets</legend>
-            <p>     
-            exercise: <select id = "operator_name" name="operator_name">
-                          {% for operator_name_from_list in operator_list %}
-                            {% if operator_name_from_list == operator_name %}
-                                <option value = "{{ operator_name_from_list }}" selected>{{ operator_name_from_list }}</option>
-                            {% else %}
-                                <option value = "{{ operator_name_from_list }}">{{ operator_name_from_list }}</option>        
-                            {% endif %}
-                          {% endfor %}
-                      </select>
-            </p>
-            <p>
-              # digits (first): <input class="short_input" type="number" id = "a_digits" name="a_digits" value=1>
-            </p>
-            <p>
-            # digits (second): <input class="short_input" type="number" id = "b_digits" name="b_digits" value=1>
-            </p>
-            <p>
-            daily target number of questions: <input class="short_input" type="number" id = "daily_target" name="daily_target" value=0>
-            </p>
-            <p><input type="submit"></p>
-          </fieldset>
-          
-      </form>
-  </p>
+  {% if user.is_authenticated %}
+    <div>    
+        <table>
+          <tr><th>operator name</th><th>a digits</th>
+          <th>b digits</th><th>daily target</th>
+          <th>target met</th>
+          </tr>
+          {% for index, row in df.iterrows %}
+            <tr>
+            <td>{{ row.operator_name}}</td> <td>{{ row.a_digits }}</td> 
+            <td>{{ row.b_digits }}</td> <td>{{ row.daily_target }}</td>
+            <td>{{ row.target_met }}</td>
+            <td>
+                <form id={{ forloop.counter}} class="go_to_exercise" action="{% url 'exercises:index' %}" method="GET">
+                  <input type="hidden" name="operator_name" value="{{ row.operator_name }}">
+                  <input type="hidden" name="a_digits" value={{ row.a_digits }}>
+                  <input type="hidden" name="b_digits" value={{ row.b_digits }}>
+                  <input class="small_input" type="submit" value="go">
+                </form>
+                <td><a href="{% url 'exercises:statistics' %}?operator_name={{ row.operator_name}}&a_digits={{row.a_digits}}&b_digits={{row.b_digits}}">stats</a></td> 
+                
+            </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <p>
+        <form id="add_targets" class="settings" action="{% url 'exercises:submit_targets' %}" method="POST">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Set New Daily Targets</legend>
+                <p>     
+                exercise: <select id = "operator_name" name="operator_name">
+                              {% for operator_name_from_list in operator_list %}
+                                {% if operator_name_from_list == operator_name %}
+                                    <option value = "{{ operator_name_from_list }}" selected>{{ operator_name_from_list }}</option>
+                                {% else %}
+                                    <option value = "{{ operator_name_from_list }}">{{ operator_name_from_list }}</option>        
+                                {% endif %}
+                              {% endfor %}
+                          </select>
+                </p>
+                <p>
+                  # digits (first): <input class="short_input" type="number" id = "a_digits" name="a_digits" value=1>
+                </p>
+                <p>
+                # digits (second): <input class="short_input" type="number" id = "b_digits" name="b_digits" value=1>
+                </p>
+                <p>
+                daily target number of questions: <input class="short_input" type="number" id = "daily_target" name="daily_target" value=0>
+                </p>
+                <p><input type="submit"></p>
+              </fieldset>
+              
+          </form>
+      </p>
+    </div>
 
+  {% else %}
+
+    <h3><a href="{% url 'exercises:signup' %}"><span>sign up</span></a> to set targets and track you stats</h3>
+
+  {% endif %}
 {% endblock content %}

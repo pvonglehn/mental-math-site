@@ -42,8 +42,11 @@
                     </li>
                 {% else %} 
                     <li class="nav-item">
-                        <a class="nav-link active" id="stats-link" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
+                        <a class="nav-link active" id="stats-link" href="{% url 'login' %}">login</a></li>
                     </li>   
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stats-link" href="{% url 'exercises:signup' %}">sign up</a></li>
+                    </li> 
                 {% endif %}
                 {% if user.is_authenticated %}
                     <li class="nav-item">

@@ -26,7 +26,7 @@ SECRET_KEY = 'rk97^cv@5ylpey-d$6lsmnfouv@s)*l2#8t=06q@&r74hd$d1-'
 DEBUG = True
 
 ALLOWED_HOSTS = ['mental-math-env.eba-bef72peb.eu-west-2.elasticbeanstalk.com',
-                 '127.0.0.1','www.mentalmath.site']
+                 '127.0.0.1','www.mentalmath.site','mentalmath.site']
 
 
 # Application definition

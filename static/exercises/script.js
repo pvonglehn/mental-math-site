@@ -274,9 +274,35 @@ document.getElementById("update_settings").addEventListener("click",function(e){
 })
 
 
+// increment and decrement number of a digits
+document.getElementById('a_digits_dec').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('a_digits').value ;
+    if (current_value > 1) {
+        document.getElementById('a_digits').value = parseInt(current_value) - 1;
+    }
+})
 
+document.getElementById('a_digits_inc').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('a_digits').value;
+    document.getElementById('a_digits').value = parseInt(current_value) + 1;
+})
 
+// increment and decrement number of b digits
+document.getElementById('b_digits_dec').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('b_digits').value ;
+    if (current_value > 1) {
+        document.getElementById('b_digits').value = parseInt(current_value) - 1;
+    }
+})
 
+document.getElementById('b_digits_inc').addEventListener("click",function(e){
+    e.preventDefault();
+    let current_value = document.getElementById('b_digits').value;
+    document.getElementById('b_digits').value = parseInt(current_value) + 1;
+})
 
 
 
