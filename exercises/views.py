@@ -63,48 +63,56 @@ class QuestionViewSet(viewsets.ModelViewSet):
 def set_targets(request):
     '''set daily targets for number of correct questions answered'''
 
-    username = request.user.username
-    targets = Target.objects.filter(username=username)
-
     template = loader.get_template('exercises/set_targets.html')
 
+    username = request.user.username
 
-    questions_set = (Question.objects.filter(username=username,
-                    date_created__date=timezone.now(),correct=True)
-                    )
+    if username == "":
+        context = {}
 
-    if len(questions_set) > 0:
-        questions_values = pd.DataFrame.from_records(questions_set.values())
-        agg = (questions_values.groupby(["operator_name","a_digits","b_digits"])["id"]
-                .count().reset_index().rename({"id":"number_correct"},axis=1) 
-                )  
     else:
-        agg = (pd.DataFrame({"operator_name":[],
-        "a_digits":[],"b_digits":[],"number_correct":[]})
-        )
 
-    targets_set = Target.objects.filter(username=username)                                                   
+        targets = Target.objects.filter(username=username)
 
-    targets = pd.DataFrame.from_records(targets_set.values())                                                        
+        
 
-    if len(targets) > 0:
-        df = (targets.merge(agg,how="left",left_on=["operator_name","a_digits","b_digits"]
-        ,right_on=["operator_name","a_digits","b_digits"])
-            .sort_values(["operator_name","a_digits","b_digits"])
-        )
-        df = df.replace(np.nan,0)
-        df["daily_target"] = df["daily_target"].astype(int)
-        df = df.loc[df["daily_target"] > 0]
-        df["target_met"] = (df["number_correct"] >= df["daily_target"]).apply(lambda x: "Yes" if x else "No")
-    else: 
-        df = pd.DataFrame()
 
-    target_operator_list = df["operator_name"].unique()
+        questions_set = (Question.objects.filter(username=username,
+                        date_created__date=timezone.now(),correct=True)
+                        )
 
-    context = { 'target_operator_list':target_operator_list,
-                'operator_list':operator_list,
-                'df':df,
-                'targets':targets}
+        if len(questions_set) > 0:
+            questions_values = pd.DataFrame.from_records(questions_set.values())
+            agg = (questions_values.groupby(["operator_name","a_digits","b_digits"])["id"]
+                    .count().reset_index().rename({"id":"number_correct"},axis=1) 
+                    )  
+        else:
+            agg = (pd.DataFrame({"operator_name":[],
+            "a_digits":[],"b_digits":[],"number_correct":[]})
+            )
+
+        targets_set = Target.objects.filter(username=username)                                                   
+
+        targets = pd.DataFrame.from_records(targets_set.values())                                                        
+
+        if len(targets) > 0:
+            df = (targets.merge(agg,how="left",left_on=["operator_name","a_digits","b_digits"]
+            ,right_on=["operator_name","a_digits","b_digits"])
+                .sort_values(["operator_name","a_digits","b_digits"])
+            )
+            df = df.replace(np.nan,0)
+            df["daily_target"] = df["daily_target"].astype(int)
+            df = df.loc[df["daily_target"] > 0]
+            df["target_met"] = (df["number_correct"] >= df["daily_target"]).apply(lambda x: "Yes" if x else "No")
+        else: 
+            df = pd.DataFrame()
+
+        target_operator_list = df["operator_name"].unique()
+
+        context = { 'target_operator_list':target_operator_list,
+                    'operator_list':operator_list,
+                    'df':df,
+                    'targets':targets}
 
     return HttpResponse(template.render(context, request))
 

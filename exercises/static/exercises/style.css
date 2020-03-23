@@ -1,9 +1,14 @@
 html, body {
     color: black;   
+    text-align:center;
 }
 
 body {
     margin-top:54px;
+}
+
+form {
+    text-align:left;
 }
 
 .answer-feedback-area {
