@@ -289,7 +289,7 @@ document.getElementById("update_settings").addEventListener("click",function(e){
         try{
             $('#accordion').collapse('toggle');
         } 
-        catch {
+        catch(err) {
             console.log("failed accordion collapse")
         }
 
@@ -377,11 +377,11 @@ statsLink.addEventListener("click",function(e){
 var current_question;
 
 function cleanFeedback() {
-    question.innerHTML = null;
-    correctIncorrect.innerHTML = null;
-    yourAnswer.innerHTML = null;
-    correctAnswer.innerHTML = null;
-    timeTaken.innerHTML = null;
+    question.innerHTML = "";
+    correctIncorrect.innerHTML = "";
+    yourAnswer.innerHTML = "";
+    correctAnswer.innerHTML = "";
+    timeTaken.innerHTML = "";
 }
 
 myFormHeight = getComputedStyle(myForm).height;

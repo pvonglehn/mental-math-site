@@ -8,8 +8,8 @@
             <form id="settings" autocomplete="off">  
                     <table id="settings_table" class="table table-bordered">
                         <thead  data-toggle="collapse" data-target="#accordion" class="thead-dark clickable collapse-row collapsed">
-                        <!-- <thead data-toggle="collapse" data-target="#accordion" class="collapse"> -->
-                            <th  colspan="2">settings</th>
+                            <tr><th  colspan="2">settings</th></tr>
+                            
                         </thead>
                         <tbody id="accordion" class="collapse">
                           <tr>
@@ -77,7 +77,7 @@
                     <input type="hidden" name="correct"        >
                     <input type="hidden" name="username" value="{{ user.username }}" >
                     <input type="hidden" name="duration"       >
-                    <input type="submit" class="buttons" id="submit-answer"></button>
+                    <input type="submit" class="buttons" id="submit-answer" value="submit">
                 </form>
                 
             </div>
