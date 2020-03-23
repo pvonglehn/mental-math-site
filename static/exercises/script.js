@@ -259,7 +259,8 @@ showQuestion.addEventListener("change", function(){
     }
 })
 
-if (window.matchMedia("(min-width: 600px)")){
+// open up settings if screen size large enough
+if (window.matchMedia("(min-width: 600px)").matches){
     $(document).ready(function(){
         document.getElementById('settings_table_head').click();
     })
