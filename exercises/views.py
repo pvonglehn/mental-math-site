@@ -322,29 +322,38 @@ def statistics(request):
                                             b_digits=b_digits))
 
     if len(questions_set) > 0:
-        df = pd.DataFrame.from_records(questions_set.values())
-      
-        #image_base64 = None
+        try:
+            df = pd.DataFrame.from_records(questions_set.values())
         
-        image_base64 = plot_daily_average(df,username=username
-                       ,operator_name=operator_name
-                       ,a_digits=a_digits
-                       ,b_digits=b_digits)
+            #image_base64 = None
+            
+            image_base64 = plot_daily_average(df,username=username
+                        ,operator_name=operator_name
+                        ,a_digits=a_digits
+                        ,b_digits=b_digits)
 
-        weekly_accuracy = plot_weekly_accuracy(df,username=username
-                       ,operator_name=operator_name
-                       ,a_digits=a_digits
-                       ,b_digits=b_digits)
+            weekly_accuracy = plot_weekly_accuracy(df,username=username
+                        ,operator_name=operator_name
+                        ,a_digits=a_digits
+                        ,b_digits=b_digits)
 
-        weekly_duration =  plot_weekly_average_time(df,username=username
-                       ,operator_name=operator_name
-                       ,a_digits=a_digits
-                       ,b_digits=b_digits)
+            weekly_duration =  plot_weekly_average_time(df,username=username
+                        ,operator_name=operator_name
+                        ,a_digits=a_digits
+                        ,b_digits=b_digits)
 
-        accuracy_all_time = accuracy_all_time(df,username=username
-                       ,operator_name=operator_name
-                       ,a_digits=a_digits
-                       ,b_digits=b_digits)
+            accuracy_all_time = accuracy_all_time(df,username=username
+                        ,operator_name=operator_name
+                        ,a_digits=a_digits
+                        ,b_digits=b_digits)
+        except:
+            image_base64 = None
+
+            accuracy_all_time = None
+
+            weekly_duration = None
+
+            weekly_accuracy = None
 
     else:
         image_base64 = None
