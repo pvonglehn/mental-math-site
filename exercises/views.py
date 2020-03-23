@@ -24,6 +24,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
 
+from django.contrib.auth import login, authenticate
+
 operator_list = ["multiplication",
                 "addition",
                 "division with decimal",
