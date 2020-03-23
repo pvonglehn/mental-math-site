@@ -1,10 +1,14 @@
 html, body {
     color: black;   
-    text-align:center;
 }
 
 body {
     margin-top:54px;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    margin-top:3rem;
 }
 
 form {
