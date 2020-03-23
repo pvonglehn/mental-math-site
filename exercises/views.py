@@ -351,6 +351,8 @@ def statistics(request):
 
         weekly_duration = None
 
+        weekly_accuracy = None
+
 
     context = { "weekly_duration":weekly_duration,
                 "weekly_accuracy":weekly_accuracy,
