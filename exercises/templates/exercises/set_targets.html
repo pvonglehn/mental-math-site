@@ -42,7 +42,7 @@
 
         </table>
       </div>
-      <p>
+      <div id="new_targets_form">
         <form id="add_targets" class="settings" action="{% url 'exercises:submit_targets' %}" method="POST">
             {% csrf_token %}
             <fieldset>
@@ -71,7 +71,7 @@
               </fieldset>
               
           </form>
-      </p>
+        </div>
     </div>
 
   {% else %}
