@@ -7,8 +7,8 @@
         <nav >
             <form id="settings" autocomplete="off">  
                     <table id="settings_table" class="table table-bordered">
-                        <thead  data-toggle="collapse" data-target="#accordion" class="thead-dark clickable collapse-row collapsed">
-                            <tr><th  colspan="2">settings</th></tr>
+                        <thead   data-toggle="collapse" data-target="#accordion" class="thead-dark clickable collapse-row collapsed">
+                            <tr><th id="settings_table_head" colspan="2">settings</th></tr>
                             
                         </thead>
                         <tbody id="accordion" class="collapse">
@@ -128,5 +128,6 @@
 
     {% load static %}
     <script src="{% static 'exercises/script.js' %}"></script>
+    
 
 {% endblock content %}

@@ -259,6 +259,13 @@ showQuestion.addEventListener("change", function(){
     }
 })
 
+// open up settings if screen size large enough
+if (window.matchMedia("(min-width: 600px)").matches){
+    $(document).ready(function(){
+        document.getElementById('settings_table_head').click();
+    })
+}
+
 document.getElementById("update_settings").addEventListener("click",function(e){
     
         e.preventDefault();
@@ -535,3 +542,5 @@ function speech_rec_function() {
 // set navbar height
 document.querySelector('body').style.marginTop =
 parseInt(getComputedStyle(document.querySelector('nav'),null).getPropertyValue("height")) -2 +"px"  ;
+
+
