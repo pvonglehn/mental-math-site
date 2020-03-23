@@ -107,7 +107,7 @@ def set_targets(request):
             df = df.loc[df["daily_target"] > 0]
             df["target_met"] = (df["number_correct"] >= df["daily_target"]).apply(lambda x: "Yes" if x else "No")
         else: 
-            df = pd.DataFrame()
+            df = pd.DataFrame({"operator_name":[]})
 
         target_operator_list = df["operator_name"].unique()
 
