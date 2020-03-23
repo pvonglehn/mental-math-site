@@ -21,6 +21,8 @@ from django.http import JsonResponse
 from django.db.models import Sum
 
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse
+from django.shortcuts import redirect, get_object_or_404
 
 operator_list = ["multiplication",
                 "addition",
@@ -97,7 +99,10 @@ def set_targets(request):
     else: 
         df = pd.DataFrame()
 
-    context = { 'operator_list':operator_list,
+    target_operator_list = df["operator_name"].unique()
+
+    context = { 'target_operator_list':target_operator_list,
+                'operator_list':operator_list,
                 'df':df,
                 'targets':targets}
 

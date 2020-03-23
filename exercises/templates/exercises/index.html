@@ -4,39 +4,59 @@
 {% block content %}  
 
     <main class="fc-pc">
-        <nav>
-            <details id="settings_drop_down">
-                <summary>settings</summary>
-            <form id="settings">
-                <ul>
-                    <li>
-                    <label for="operator_name">exercise</label>
-                    <select id = "operator_name" name="operator_name">
-                        <option value = "addition">addition</option>
-                        <option value = "subtraction">subtraction</option>
-                        <option value = "multiplication">multiplication</option>
-                        <option value = "division">division</option>
-                    </select></li>
-                    <li>
-                        <label for="a_digits"># digits left <button id="a_digits_dec">-</button></label>
-                        <input id="a_digits" name="a_digits" type="number" min="1" max="15" value="1" step="1">
-                        <button id="a_digits_inc">+</button>
-                    </li>
-                    <li>
-                        <label for="b_digits"># digits left <button id="b_digits_dec">-</button></label>
-                        <input id="b_digits" name="b_digits" type="number" min="1" max="15" value="1" step="1">
-                        <button id="b_digits_inc">+</button>
-                    </li>
-                    <li><label for="readAloud">read aloud</label>
-                    <input id="readAloud" type="checkbox" name="readAloud"></li>
-                    <li><label for="showQuestion">show question</label>
-                    <input id="showQuestion" type="checkbox" name="showQuestion" checked></li>
-                    <li><label for="speechRecognition">speech recognition</label>
-                    <input id="speechRecognition" type="checkbox" name="speechRecognition"></li>
-                    <li><input id="update_settings" type="submit" value="update settings"></li>
-                </ul>
+        <nav >
+            <form id="settings" autocomplete="off">  
+                    <table id="settings_table" class="table table-bordered">
+                        <thead  data-toggle="collapse" data-target="#accordion" class="thead-dark clickable collapse-row collapsed">
+                        <!-- <thead data-toggle="collapse" data-target="#accordion" class="collapse"> -->
+                            <th  colspan="2">settings</th>
+                        </thead>
+                        <tbody id="accordion" class="collapse">
+                          <tr>
+                            <td><label for="operator_name">exercise</label></td>
+                            <td><select id = "operator_name" name="operator_name">
+                                <option value = "addition">addition</option>
+                                <option value = "subtraction">subtraction</option>
+                                <option value = "multiplication">multiplication</option>
+                                <option value = "division">division</option>
+                            </select></td>
+                          </tr>
+                          <tr>
+                            <td><label for="a_digits"># digits left</label></td>
+                            <td><button id="a_digits_dec">-</button>
+                                <input id="a_digits" name="a_digits" type="number" min="1" max="15" value="1" step="1">
+                                <button id="a_digits_inc">+</button></td>
+                          </tr>
+                          <tr>
+                            <td><label for="b_digits"># digits right</label></td>
+                            <td><button id="b_digits_dec">-</button>
+                                <input id="b_digits" name="b_digits" type="number" min="1" max="15" value="1" step="1">
+                                <button id="b_digits_inc">+</button></td>
+                          </tr>
+                          <tr>
+                            <td><label for="readAloud">read aloud</label></td>
+                            <td><input style="float: right;" id="readAloud" type="checkbox" name="readAloud" data-toggle="toggle"></td>
+                          </tr>
+                          <tr>
+                            <td><label for="showQuestion">show question</label></td>
+                            <td><input id="showQuestion" type="checkbox" name="showQuestion"  data-toggle="toggle" checked></td>
+                          </tr>
+                          <tr>
+                            <td><label for="speechRecognition">speech recognition</label></td>
+                            <td><input id="speechRecognition" type="checkbox" name="speechRecognition" data-toggle="toggle"></td>
+                          </tr>
+                          <tr>
+                            <td colspan="2"><input class="buttons" id="update_settings" type="submit" value="update settings"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+
+
+
+                  
             </form>
-            </details>
+           
         </nav>
         <div>
             <div id="question-area">
@@ -44,7 +64,7 @@
                 <p id="question"></p>
             </div> 
             <div id="input-area" class="answer-feedback-area">
-                <form  id="myForm">
+                <form  id="myForm" autocomplete="off">
                     {% csrf_token %}  
                     
                     <p ><input id="user_answer" name="user_answer" type="number"></p>
@@ -102,6 +122,8 @@
                 
             
         </div>
+
+        
     </main>
 
     {% load static %}

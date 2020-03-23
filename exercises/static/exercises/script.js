@@ -96,7 +96,7 @@ class Question {
         }
     }
 
-    feedback(feedback_div) {
+    feedback(feedback) {
         if (this.checkAnswer()) {
             correctIncorrect.innerHTML =  `${this.user_answer} is correct!`;
         } else {
@@ -122,7 +122,7 @@ class DailyStats {
 
         updateFromServer() {
 
-            if (username == "") {
+            if (this.username == "" ) {
                 this.reset();
                 
             } else {
@@ -136,7 +136,7 @@ class DailyStats {
                         ds.correct = response_json.correct;
                         ds.total = response_json.total;
                         ds.total_duration = response_json.total_duration;
-                        ds.daily_target = response_json.daily_target;
+                        ds.daily_target = response_json.daily_target || "";
                         ds.calculate_derived();
                         ds.updateTable();
                     }
@@ -200,7 +200,7 @@ class DailyStats {
                 document.getElementById("daily_accuracy").innerHTML = "";
             }           
             
-            document.getElementById("daily_target").innerHTML = this.daily_target;
+            document.getElementById("daily_target").innerHTML = this.daily_target || "";
 
             document.getElementById('daily_stats_heading').innerHTML = "daily stats: " 
                                                                 + this.operator_name 
@@ -224,7 +224,7 @@ class DailyStats {
             }
 
             ++this.total;            
-            // this.total_duration += question.duration;
+            this.total_duration += question.duration;
             // this.mean_duration = this.total_duration / this.total;
             // this.accuracy = 100*(this.correct / this.total);
             this.calculate_derived();
@@ -238,7 +238,7 @@ const newQuestionButton = document.getElementById("new-question");
 const question = document.getElementById("question");
 const myForm = document.getElementById("myForm");
 const userAnswerBox = document.getElementById("user_answer");
-const feedback_div = document.getElementById("feedback");
+const feedback = document.getElementById("feedback");
 const timeTaken = document.getElementById("time-taken");
 const correctIncorrect = document.getElementById("correct-incorrect");
 const yourAnswer = document.getElementById("your-answer");
@@ -251,6 +251,7 @@ const correctAnswer = document.getElementById("correct-answer");
 const settings = document.getElementById("settings");
 var showQuestion = document.getElementById("showQuestion");
 showQuestion.addEventListener("change", function(){
+    
     if (showQuestion.checked) {
         question.style.visibility = "visible";
     } else {
@@ -268,14 +269,30 @@ document.getElementById("update_settings").addEventListener("click",function(e){
         settings.elements.b_digits.value,
         myForm.elements.username.value);
         
-        cleanFeedback()
+        cleanFeedback();
 
-        document.getElementById('settings_drop_down').removeAttribute("open");
+        
+        toggleState("inactive");
+
         document.getElementById('exercise-type').innerHTML = settings.elements.operator_name.value 
                                                     + "<br />"
                                                     + " " + settings.elements.a_digits.value 
                                                     + " by " + settings.elements.b_digits.value
         document.getElementById('exercise-type').style.display = "block";
+
+        if (showQuestion.checked) {
+            question.style.visibility = "visible";
+        } else {
+            question.style.visibility = "hidden";
+        }
+
+        try{
+            $('#accordion').collapse('toggle');
+        } 
+        catch {
+            console.log("failed accordion collapse")
+        }
+
 })
 
 
@@ -368,7 +385,7 @@ function cleanFeedback() {
 }
 
 myFormHeight = getComputedStyle(myForm).height;
-const feedback = document.getElementById("feedback")
+
 feedbackHeight = getComputedStyle(feedback).height;
 
 function toggleState(state) {
@@ -444,7 +461,7 @@ function sendData(form) {
 myForm.addEventListener("submit",function(event){
     event.preventDefault();
     current_question.setUserAnswer(myForm.elements["user_answer"].value);
-    current_question.feedback(feedback_div);
+    current_question.feedback(feedback);
 
     // fill in form to be sent to backend
     myForm.elements.operator_name.value = current_question.operator_name;
@@ -515,3 +532,6 @@ function speech_rec_function() {
 }
 
 
+// set navbar height
+document.querySelector('body').style.marginTop =
+parseInt(getComputedStyle(document.querySelector('nav'),null).getPropertyValue("height")) -2 +"px"  ;

@@ -1,7 +1,9 @@
 html, body {
-    color: black;
-    margin-top: 2.2rem;
-    
+    color: black;   
+}
+
+body {
+    margin-top:54px;
 }
 
 .answer-feedback-area {
@@ -45,14 +47,6 @@ input {
     font-size: 2.4rem;
 }
 
-details {
-    margin-left: 0.4rem;
-}
-
-summary {
-    font-size: 1.2rem;
-}
-
 .fc {
     display:flex;
     flex-flow: row wrap;
@@ -62,13 +56,18 @@ summary {
 @media only screen and (min-width: 600px) {
     .fc-pc > * {
         margin-left:2em;
-        margin-right:2em
+        margin-right:2em;
+        flex-basis: 300px;
     }
 
     .fc-pc {
         display:flex;
         flex-flow: row wrap;
         justify-content: center;
+    }
+
+    html {
+        margin-top:5rem;
     }
 }
 
@@ -85,5 +84,20 @@ img {
     margin-top:2rem;
 }
 
+/* #settings_drop_down {
+
+} */
+
+ul {
+    list-style-type: none;
+}
 
 
+#targets_table  {
+    text-align: center;
+}
+
+.button_small {
+    width:2.5em;
+    height:2em;
+}

@@ -96,7 +96,7 @@ class Question {
         }
     }
 
-    feedback(feedback_div) {
+    feedback(feedback) {
         if (this.checkAnswer()) {
             correctIncorrect.innerHTML =  `${this.user_answer} is correct!`;
         } else {
@@ -121,26 +121,33 @@ class DailyStats {
         }
 
         updateFromServer() {
-            let xhttp = new XMLHttpRequest();
-            var ds = this;
-            xhttp.onreadystatechange=function() {
-                if (this.readyState == 4 && this.status == 200) {
-                 
-                    let response_json = JSON.parse(this.responseText)
-                    ds.correct = response_json.correct;
-                    ds.total = response_json.total;
-                    ds.total_duration = response_json.total_duration;
-                    ds.daily_target = response_json.daily_target;
-                    ds.calculate_derived();
-                    ds.updateTable();
-                }
-            };
-            xhttp.open("GET","/get_daily_stats?" 
-                            + "operator_name=" + this.operator_name
-                            + "&a_digits=" + this.a_digits
-                            + "&b_digits=" + this.b_digits
-                            + "&username="  + this.username);
-            xhttp.send();
+
+            if (this.username == "" ) {
+                this.reset();
+                
+            } else {
+
+                let xhttp = new XMLHttpRequest();
+                var ds = this;
+                xhttp.onreadystatechange=function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    
+                        let response_json = JSON.parse(this.responseText)
+                        ds.correct = response_json.correct;
+                        ds.total = response_json.total;
+                        ds.total_duration = response_json.total_duration;
+                        ds.daily_target = response_json.daily_target || "";
+                        ds.calculate_derived();
+                        ds.updateTable();
+                    }
+                };
+                xhttp.open("GET","/get_daily_stats?" 
+                                + "operator_name=" + this.operator_name
+                                + "&a_digits=" + this.a_digits
+                                + "&b_digits=" + this.b_digits
+                                + "&username="  + this.username);
+                xhttp.send();
+            }
             
         }
 
@@ -161,7 +168,7 @@ class DailyStats {
         reset() {
             this.correct = 0;
             this.incorrect = 0;
-            this.total
+            this.total = 0;
             this.total_duration = 0;
             this.accuracy = 0;
             this.mean_duration = 0;   
@@ -193,7 +200,7 @@ class DailyStats {
                 document.getElementById("daily_accuracy").innerHTML = "";
             }           
             
-            document.getElementById("daily_target").innerHTML = this.daily_target;
+            document.getElementById("daily_target").innerHTML = this.daily_target || "";
 
             document.getElementById('daily_stats_heading').innerHTML = "daily stats: " 
                                                                 + this.operator_name 
@@ -202,9 +209,7 @@ class DailyStats {
         }
 
         update(question) {
-            if (question.username == "") {
-                return null;
-            }  
+            
 
             if (!(question.operator_name === this.operator_name
                && question.a_digits == this.a_digits
@@ -220,8 +225,9 @@ class DailyStats {
 
             ++this.total;            
             this.total_duration += question.duration;
-            this.mean_duration = this.total_duration / this.total;
-            this.accuracy = 100*(this.correct / this.total);
+            // this.mean_duration = this.total_duration / this.total;
+            // this.accuracy = 100*(this.correct / this.total);
+            this.calculate_derived();
             this.updateTable();
 
         }
@@ -232,7 +238,7 @@ const newQuestionButton = document.getElementById("new-question");
 const question = document.getElementById("question");
 const myForm = document.getElementById("myForm");
 const userAnswerBox = document.getElementById("user_answer");
-const feedback_div = document.getElementById("feedback");
+const feedback = document.getElementById("feedback");
 const timeTaken = document.getElementById("time-taken");
 const correctIncorrect = document.getElementById("correct-incorrect");
 const yourAnswer = document.getElementById("your-answer");
@@ -245,6 +251,7 @@ const correctAnswer = document.getElementById("correct-answer");
 const settings = document.getElementById("settings");
 var showQuestion = document.getElementById("showQuestion");
 showQuestion.addEventListener("change", function(){
+    
     if (showQuestion.checked) {
         question.style.visibility = "visible";
     } else {
@@ -256,21 +263,36 @@ document.getElementById("update_settings").addEventListener("click",function(e){
     
         e.preventDefault();
         
-        // only if user is signed in
-        if (username) {
-            window.ds = new DailyStats(settings.elements.operator_name.value,
-            settings.elements.a_digits.value,
-            settings.elements.b_digits.value,
-            myForm.elements.username.value);
-        }
-        cleanFeedback()
+        // fetch daily stats from server
+        window.ds = new DailyStats(settings.elements.operator_name.value,
+        settings.elements.a_digits.value,
+        settings.elements.b_digits.value,
+        myForm.elements.username.value);
+        
+        cleanFeedback();
 
-        document.getElementById('settings_drop_down').removeAttribute("open");
+        
+        toggleState("inactive");
+
         document.getElementById('exercise-type').innerHTML = settings.elements.operator_name.value 
                                                     + "<br />"
                                                     + " " + settings.elements.a_digits.value 
                                                     + " by " + settings.elements.b_digits.value
         document.getElementById('exercise-type').style.display = "block";
+
+        if (showQuestion.checked) {
+            question.style.visibility = "visible";
+        } else {
+            question.style.visibility = "hidden";
+        }
+
+        try{
+            $('#accordion').collapse('toggle');
+        } 
+        catch {
+            console.log("failed accordion collapse")
+        }
+
 })
 
 
@@ -319,14 +341,14 @@ var operator_name = settings.elements.operator_name.value;
 var a_digits = settings.elements.a_digits.value;
 var b_digits = settings.elements.b_digits.value;
 
-if (username) {
-    var ds = new DailyStats(operator_name,
-                        a_digits,
-                        b_digits,
-                        username);
 
-    const dailyStatsTable = document.getElementById("dailyStatsTable");
-}
+var ds = new DailyStats(operator_name,
+                    a_digits,
+                    b_digits,
+                    username);
+
+const dailyStatsTable = document.getElementById("dailyStatsTable");
+
 
 // update statistics link to reflect current settings
 
@@ -363,7 +385,7 @@ function cleanFeedback() {
 }
 
 myFormHeight = getComputedStyle(myForm).height;
-const feedback = document.getElementById("feedback")
+
 feedbackHeight = getComputedStyle(feedback).height;
 
 function toggleState(state) {
@@ -439,7 +461,7 @@ function sendData(form) {
 myForm.addEventListener("submit",function(event){
     event.preventDefault();
     current_question.setUserAnswer(myForm.elements["user_answer"].value);
-    current_question.feedback(feedback_div);
+    current_question.feedback(feedback);
 
     // fill in form to be sent to backend
     myForm.elements.operator_name.value = current_question.operator_name;
@@ -510,3 +532,6 @@ function speech_rec_function() {
 }
 
 
+// set navbar height
+document.querySelector('body').style.marginTop =
+parseInt(getComputedStyle(document.querySelector('nav'),null).getPropertyValue("height")) -2 +"px"  ;

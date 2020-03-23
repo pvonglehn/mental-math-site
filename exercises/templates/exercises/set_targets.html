@@ -4,29 +4,42 @@
 {% block content %}  
 
   {% if user.is_authenticated %}
-    <div>    
-        <table>
-          <tr><th>operator name</th><th>a digits</th>
-          <th>b digits</th><th>daily target</th>
-          <th>target met</th>
-          </tr>
-          {% for index, row in df.iterrows %}
-            <tr>
-            <td>{{ row.operator_name}}</td> <td>{{ row.a_digits }}</td> 
-            <td>{{ row.b_digits }}</td> <td>{{ row.daily_target }}</td>
-            <td>{{ row.target_met }}</td>
-            <td>
-                <form id={{ forloop.counter}} class="go_to_exercise" action="{% url 'exercises:index' %}" method="GET">
-                  <input type="hidden" name="operator_name" value="{{ row.operator_name }}">
-                  <input type="hidden" name="a_digits" value={{ row.a_digits }}>
-                  <input type="hidden" name="b_digits" value={{ row.b_digits }}>
-                  <input class="small_input" type="submit" value="go">
-                </form>
-                <td><a href="{% url 'exercises:statistics' %}?operator_name={{ row.operator_name}}&a_digits={{row.a_digits}}&b_digits={{row.b_digits}}">stats</a></td> 
-                
-            </td>
+    <div class="fc">    
+        <h3>daily targets</h3>
+        <table id="targets_table" class="table" >
+          <thead class="thead-dark">
+            <tr><th>left digits</th>
+            <th>right digits</th><th>daily target</th>
+            <th>target met?</th>
+            <th colspan="2"> </th>
             </tr>
+          </thead>
+          {% for operator in target_operator_list %}
+            <tr><th colspan="6">{{operator}}</th></tr>
+            {% for index, row in df.iterrows %}
+              {% if row.operator_name == operator %}
+                <tr>
+                  <td>{{ row.a_digits }}</td>
+                <td>{{ row.b_digits }}</td> <td>{{ row.daily_target }}</td>
+                <td>{{ row.target_met }}</td>
+                <td>
+                    <form id={{ forloop.counter}} class="go_to_exercise" action="{% url 'exercises:index' %}" method="GET">
+                      <input type="hidden" name="operator_name" value="{{ row.operator_name }}">
+                      <input type="hidden" name="a_digits" value={{ row.a_digits }}>
+                      <input type="hidden" name="b_digits" value={{ row.b_digits }}>
+                      <input class="button_small" type="submit" value="go">
+                    </form>
+                    <td><a href="{% url 'exercises:statistics' %}?operator_name={{ row.operator_name}}&a_digits={{row.a_digits}}&b_digits={{row.b_digits}}">stats</a></td> 
+                    
+                </td>
+                </tr>
+              {% endif %}
           {% endfor %}
+
+          {% endfor %}
+
+
+
         </table>
       </div>
       <p>
