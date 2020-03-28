@@ -293,12 +293,14 @@ document.getElementById("update_settings").addEventListener("click",function(e){
             question.style.visibility = "hidden";
         }
 
-        try{
-            $('#accordion').collapse('toggle');
-        } 
-        catch(err) {
-            console.log("failed accordion collapse")
+
+        // close settings if on mobile
+        if (!window.matchMedia("(min-width: 600px)").matches){
+            $(document).ready(function(){
+                document.getElementById('settings_table_head').click();
+            })
         }
+        
 
 })
 
