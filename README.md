@@ -3,6 +3,8 @@ web app for training mental math ability
 
 Site found at: [mentalmath.site](http://mentalmath.site)
 
-Web app for training multiplication, subtraction division and addition. With speech recognition and text to speech functionality.
-
-Build with python (Django), javascript and PostgreSQL. Currently hosted on AWS.
+* Train multiplication, subtraction division and addition
+* Track speed and accuracy progress over time
+* Speech recognition and text to speech functionality
+* Built with python (Django), javascript and PostgreSQL 
+* Hosted on AWS.
