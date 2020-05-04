@@ -3,7 +3,9 @@
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.ebextensions
 *pyc
 venv
 .vscode 
 mysite.log 
+db.sqlite3
