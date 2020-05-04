@@ -1,7 +1,7 @@
 # mental-math-site
 web app for training mental math ability
 
-Site found here: [mentalmath.site](http://mentalmath.site)
+Site found at: [mentalmath.site](http://mentalmath.site)
 
 Web app for training multiplication, subtraction division and addition. With speech recognition and text to speech functionality.
 
