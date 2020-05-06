@@ -9,6 +9,9 @@ Site found at: [mentalmath.site](http://mentalmath.site)
 * Built with python (Django), javascript and PostgreSQL 
 * Hosted on AWS
 
+## Known issues:
+* limited cross browser support, may not behave as expected on all browsers
+
 ## Screenshots
 
 ![screenshot of mentalmath.site](media/screenshot.PNG)
