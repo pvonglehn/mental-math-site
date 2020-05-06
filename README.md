@@ -7,4 +7,10 @@ Site found at: [mentalmath.site](http://mentalmath.site)
 * Track speed and accuracy progress over time
 * Speech recognition and text to speech functionality
 * Built with python (Django), javascript and PostgreSQL 
-* Hosted on AWS.
+* Hosted on AWS
+
+## Screenshots
+
+![screenshot of mentalmath.site](media/screenshot.PNG)
+
+![screenshot of mentalmath.site statistics](media/statistics.PNG)
