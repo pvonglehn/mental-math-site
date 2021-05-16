@@ -9,3 +9,4 @@ venv
 .vscode 
 mysite.log 
 db.sqlite3
+.env
