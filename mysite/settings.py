@@ -29,8 +29,7 @@ if os.environ.get("DJANGO_DEBUG","FALSE").upper() == "TRUE":
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['mental-math-env.eba-bef72peb.eu-west-2.elasticbeanstalk.com',
-                 '127.0.0.1','www.mentalmath.site','mentalmath.site']
+ALLOWED_HOSTS = ['https://fathomless-brook-31661.herokuapp.com']
 
 
 # Application definition
