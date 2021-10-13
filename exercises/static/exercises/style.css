@@ -18,7 +18,6 @@ h1, h2, h3 {
     min-height: 12rem;
     border: solid 1px white;
     /* padding-bottom:1rem; */
-   
 }
 
 #question-area {
@@ -35,6 +34,20 @@ h1, h2, h3 {
     width: 12rem;
     font-size: 1.5rem;
 }
+
+.buttons, #remainder{
+    height: 4rem;
+    width: 12rem;
+    font-size: 1.5rem;
+}
+
+.buttons, #quotient {
+    height: 4rem;
+    width: 12rem;
+    font-size: 1.5rem;
+}
+
+label { display:block;}
 
 #correct-incorrect {
     font-size: 1.5rem;
@@ -58,6 +71,10 @@ input {
     display:flex;
     flex-flow: row wrap;
     justify-content: center;
+}
+
+.fi {
+    flex-grow: 1;
 }
 
 @media only screen and (min-width: 600px) {

@@ -64,12 +64,19 @@
                 <p id="question"></p>
             </div> 
             <div id="input-area" class="answer-feedback-area">
-                <form  id="myForm" autocomplete="off">
+                <form  id="myForm" autocomplete="off" class="fc">
                     {% csrf_token %}  
-                    <p><input id="user_answer" name="user_answer" type="number"></p>
-                    <p> quotient<input id="quotient" name="quotient" type="number"></p>
-                    <p> remainder<input id="remainder" name="remainder" type="number"></p>
-                    
+                    <div>
+                        <div id="user_answer_container" ><input id="user_answer" name="user_answer" type="number"></div>
+                        <div id="quotient_container" class="fi">
+                            <label for="quotient">quotient</label>
+                            <input id="quotient" name="quotient" type="number">
+                        </div>
+                        <div id="remainder_container" class="fi"> 
+                            <label for "remainder">remainder</label>
+                            <input id="remainder" name="remainder" type="number">
+                        </div>
+                    </div>
                     <input type="hidden" name="operator_name"  > 
                     <input type="hidden" name="a_digits"       >   
                     <input type="hidden" name="b_digits"       >

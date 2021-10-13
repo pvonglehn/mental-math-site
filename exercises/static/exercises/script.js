@@ -296,8 +296,17 @@ document.getElementById("update_settings").addEventListener("click",function(e){
                                                     + " by " + settings.elements.b_digits.value
         document.getElementById('exercise-type').style.display = "block";
 
-        if (settings.elements.operator_name == "division") {
-            document.getElementById('user_answer').style.visibility = "hidden"
+        let user_answer_container = document.getElementById('user_answer_container')
+        let quotient_container = document.getElementById('quotient_container')
+        let remainder_container = document.getElementById('remainder_container')
+        if (settings.elements.operator_name.value == "division") {
+            user_answer_container.style.display = "none"
+            quotient_container.style.display = "inline"
+            remainder_container.style.display = "inline"
+        } else {
+            user_answer_container.style.display = "inline"
+            quotient_container.style.display = "none"
+            remainder_container.style.display = "none"
         }
 
         if (showQuestion.checked) {
