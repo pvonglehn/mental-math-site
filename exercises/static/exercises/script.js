@@ -503,6 +503,8 @@ myForm.addEventListener("submit",function(event){
     
     sendData(myForm);
 
+    myForm.reset();
+
     // update daily stats (if ds exists)
     ds && ds.update(current_question);
 
