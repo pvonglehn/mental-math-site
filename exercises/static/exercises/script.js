@@ -90,19 +90,18 @@ class Question {
     checkAnswer() {
         if (this.operator_name == "division") {
             if ((this.quotient == this.user_answer[0]) & (this.remainder == this.user_answer[1])) {
-                return true
-            } else { 
-                return false
+                this.correct = true;
+                } else {
+                    this.correct = false;
+                }
+            } else {
+            if (this.answer == this.user_answer) {
+                this.correct = true;
+            } else {
+            this.correct = false;
             }
         }
-        if (this.answer = this.user_answer) {
-            this.correct = true;
-            return true;
-        } else {
-            
-            this.correct = false;
-            return false;
-        }
+        return this.correct;
     }
 
     feedback(feedback) {
