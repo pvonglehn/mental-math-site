@@ -467,7 +467,11 @@ newQuestionButton.addEventListener("click",function(){
     }
     userAnswerBox.value = null;
     if (!settings.elements.speechRecognition.checked) {
-        userAnswerBox.focus();
+        if (settings.elements.operator_name.value == "division") {
+            document.getElementById("quotient").focus();
+        } else {
+            userAnswerBox.focus();
+        }
     }
 })
 
@@ -488,7 +492,9 @@ function sendData(form) {
 
 myForm.addEventListener("submit",function(event){
     event.preventDefault();
-    current_question.setUserAnswer(myForm.elements["user_answer"].value, myForm.elements["quotient"].value, myForm.elements["remainder"].value);
+    let quotient = document.getElementById('quotient').value;
+    let remainder = document.getElementById('remainder').value;
+    current_question.setUserAnswer(myForm.elements["user_answer"].value, quotient, remainder);
     current_question.feedback(feedback);
 
     // fill in form to be sent to backend
@@ -503,6 +509,7 @@ myForm.addEventListener("submit",function(event){
     sendData(myForm);
 
     myForm.reset();
+    document.getElementById("remainder_quotient_input").reset();
 
     // update daily stats (if ds exists)
     ds && ds.update(current_question);
