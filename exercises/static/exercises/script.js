@@ -54,16 +54,14 @@ class Question {
 
     if (this.operator_name == "division") {
 
-        // first do multiplication and then swap the answer and
-        // randomly generate operands
         this.a = getRandomInt(a_min, a_max);
         this.b = getRandomInt(b_min, b_max);
         
 
         // calculate answer
-        let tmp = operations["multiplication"](this.a,this.b);
-        this.answer = this.a;
-        this.a = tmp;
+        this.quotient = Math.floor(this.a/this.b);
+        this.remainder = this.a % this.b;
+        this.answer = [this.quotient, this.remainder]
 
         this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
 
@@ -79,14 +77,25 @@ class Question {
     }
 
     // add answer
-    setUserAnswer(user_answer) {
+    setUserAnswer(user_answer, quotient, remainder) {
+        if (this.operator_name == "division") {
+            this.user_answer = [quotient,remainder]
+        } else {
         this.user_answer = user_answer;
+    }
         this.end = new Date().getTime();
         this.duration = (this.end - this.start) / 1000;
     }
 
     checkAnswer() {
-        if (this.answer == this.user_answer) {
+        if (this.operator_name == "division") {
+            if ((this.quotient == this.user_answer[0]) & (this.remainder == this.user_answer[1])) {
+                return true
+            } else { 
+                return false
+            }
+        }
+        if (this.answer = this.user_answer) {
             this.correct = true;
             return true;
         } else {
@@ -287,20 +296,22 @@ document.getElementById("update_settings").addEventListener("click",function(e){
                                                     + " by " + settings.elements.b_digits.value
         document.getElementById('exercise-type').style.display = "block";
 
+        if (settings.elements.operator_name == "division") {
+            document.getElementById('user_answer').style.visibility = "hidden"
+        }
+
         if (showQuestion.checked) {
             question.style.visibility = "visible";
         } else {
             question.style.visibility = "hidden";
         }
 
-
-        // close settings if on mobile
-        if (!window.matchMedia("(min-width: 600px)").matches){
-            $(document).ready(function(){
-                document.getElementById('settings_table_head').click();
-            })
+        try{
+            $('#accordion').collapse('toggle');
+        } 
+        catch(err) {
+            console.log("failed accordion collapse")
         }
-        
 
 })
 
@@ -469,7 +480,7 @@ function sendData(form) {
 
 myForm.addEventListener("submit",function(event){
     event.preventDefault();
-    current_question.setUserAnswer(myForm.elements["user_answer"].value);
+    current_question.setUserAnswer(myForm.elements["user_answer"].value, myForm.elements["quotient"].value, myForm.elements["remainder"].value);
     current_question.feedback(feedback);
 
     // fill in form to be sent to backend
