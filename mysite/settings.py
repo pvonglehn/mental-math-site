@@ -89,7 +89,7 @@ DATABASES = {
         'USER': "mental_maths_app",
         'PASSWORD': os.environ["DJANGO_DB_PASSWORD"],
         'HOST': os.environ["DJANGO_DB_HOST"],
-        'PORT': "5432",
+        'PORT': os.environ.get("DJANGO_DB_PORT","5432"),
     }
 }
 
