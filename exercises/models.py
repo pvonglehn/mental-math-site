@@ -26,6 +26,7 @@ class Question(models.Model):
     username = models.CharField(max_length=200,null=True,blank=True)
     duration = models.FloatField(default=None,null=True,blank=True)
     date_created = models.DateTimeField(verbose_name=("Creation date"), auto_now_add=True, null=True)
+    read_aloud = models.BooleanField(default=False)
         
     class Meta:
         # Latest by priority descending, order_date ascending.

@@ -39,16 +39,19 @@ def index(request):
 
     return HttpResponse(template.render(context, request))
 
+def convert_bools(dict_:dict)-> dict:
+    '''Converts javascript booleans to python booleans'''
+
+    bool_conv = { "true":True, "false":False, "":None }
+    return { k:bool_conv.get(v,v) for k, v in dict_.items()}
+
 @require_http_methods(["POST"])
 def submit_answer(request):
 
     if request.method == 'POST':
-        params = { k:v for k,v in request.POST.items() if k != 'csrfmiddlewaretoken' } 
         
-        # convert javascript boolean to python boolean
-        bool_conv = { "true":True, "false":False }
-        params["correct"] = bool_conv.get(params["correct"])
-
+        params = { k:v for k,v in request.POST.items() if k != 'csrfmiddlewaretoken' } 
+        params = convert_bools(params)
         question = Question(**params)
         question.save()
         
