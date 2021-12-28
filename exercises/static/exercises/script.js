@@ -442,6 +442,9 @@ function toggleState(state) {
 newQuestionButton.focus();
 toggleState("inactive")
 
+// create webkit API speech synthesis 
+var synth = window.speechSynthesis;
+
 newQuestionButton.addEventListener("click",function(){
     document.getElementById("exercise-type").style.display = "none";
     cleanFeedback();
@@ -454,12 +457,15 @@ newQuestionButton.addEventListener("click",function(){
                         username=myForm.elements.username.value);
 
     question.innerHTML = current_question.question;
+    
     if (settings.elements['readAloud'].checked){
+        var utterThis = new SpeechSynthesisUtterance(question.textContent);
+        synth.speak(utterThis);
         if (settings.elements['speechRecognition'].checked){
-            responsiveVoice.speak(question.textContent,"UK English Male",{onend: speech_rec_function});
-        } else {
-            responsiveVoice.speak(question.textContent,"UK English Male");
-        }
+            utterThis.onend = function(event) {
+                speech_rec_function();
+              }
+        } 
     } else {
         if (settings.elements['speechRecognition'].checked) {
             speech_rec_function();
