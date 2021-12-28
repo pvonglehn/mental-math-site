@@ -506,6 +506,8 @@ myForm.addEventListener("submit",function(event){
     myForm.elements.correct.value = current_question.correct;
     myForm.elements.duration.value = current_question.duration;
     myForm.elements.read_aloud.value = settings.readAloud.checked;
+    myForm.elements.speech_recognition.value = settings.speechRecognition.checked;
+    myForm.elements.show_question.value = settings.showQuestion.checked;
     
     sendData(myForm);
 
