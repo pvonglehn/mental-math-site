@@ -27,6 +27,8 @@ class Question(models.Model):
     duration = models.FloatField(default=None,null=True,blank=True)
     date_created = models.DateTimeField(verbose_name=("Creation date"), auto_now_add=True, null=True)
     read_aloud = models.BooleanField(default=False)
+    show_question = models.BooleanField(default=True)
+    speech_recognition = models.BooleanField(default=False)
         
     class Meta:
         # Latest by priority descending, order_date ascending.
