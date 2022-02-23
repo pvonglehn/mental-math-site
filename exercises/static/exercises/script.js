@@ -113,6 +113,8 @@ class Question {
             correctAnswer.innerHTML = `correct answer: ${this.answer}`;
         }
         timeTaken.innerHTML = `time taken: ${Math.round(this.duration * 10) / 10} seconds`;
+        question.style.visibility = "visible";
+
     }
 }
 
@@ -258,14 +260,7 @@ const correctAnswer = document.getElementById("correct-answer");
 // Settings
 const settings = document.getElementById("settings");
 var showQuestion = document.getElementById("showQuestion");
-showQuestion.addEventListener("change", function(){
-    
-    if (showQuestion.checked) {
-        question.style.visibility = "visible";
-    } else {
-        question.style.visibility = "hidden";
-    }
-})
+showQuestion.addEventListener("change", toggleQuestionVisibility)
 
 // open up settings if screen size large enough
 if (window.matchMedia("(min-width: 600px)").matches){
@@ -306,12 +301,6 @@ document.getElementById("update_settings").addEventListener("click",function(e){
             user_answer_container.style.display = "inline"
             quotient_container.style.display = "none"
             remainder_container.style.display = "none"
-        }
-
-        if (showQuestion.checked) {
-            question.style.visibility = "visible";
-        } else {
-            question.style.visibility = "hidden";
         }
 
         try{
@@ -404,12 +393,21 @@ statsLink.addEventListener("click",function(e){
 // create unassigned variable current_question
 var current_question;
 
+function toggleQuestionVisibility() {
+    if (showQuestion.checked) {
+        question.style.visibility = "visible";
+    } else {
+        question.style.visibility = "hidden";
+    }
+}
+
 function cleanFeedback() {
     question.innerHTML = "";
     correctIncorrect.innerHTML = "";
     yourAnswer.innerHTML = "";
     correctAnswer.innerHTML = "";
     timeTaken.innerHTML = "";
+    toggleQuestionVisibility();
 }
 
 myFormHeight = getComputedStyle(myForm).height;
