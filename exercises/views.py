@@ -29,7 +29,8 @@ from django.contrib.auth import login, authenticate
 operator_list = ["multiplication",
                 "addition",
                 "division",
-                "subtraction"]
+                "subtraction",
+                "percent"]
 
 def index(request):
     

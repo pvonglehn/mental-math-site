@@ -17,64 +17,75 @@ class Question {
 
     constructor (operator_name,a_digits=1,b_digits=1,username) {
     // get function from operator string
-    let operations = {
-        "addition" : function (operand1, operand2) {
-            return operand1 + operand2;
-        },
-        "subtraction" : function (operand1, operand2) {
-            return operand1 - operand2;
-        },
-        "multiplication" : function (operand1, operand2) {
-            return operand1 * operand2;
+        let operations = {
+            "addition" : function (operand1, operand2) {
+                return operand1 + operand2;
+            },
+            "subtraction" : function (operand1, operand2) {
+                return operand1 - operand2;
+            },
+            "multiplication" : function (operand1, operand2) {
+                return operand1 * operand2;
+            }
+            
+        };
+
+        let operator_names2symbols = {
+            "addition" : "+",
+            "subtraction" : "-",
+            "multiplication" : "&times;",
+            "division" : "&div;",
+            "percent" : "% of"
         }
-        
-    };
 
-    let operator_names2symbols = {
-        "addition" : "+",
-        "subtraction" : "-",
-        "multiplication" : "&times;",
-        "division" : "&div;"
+        // start time
+        this.start = new Date().getTime()
+
+        this.operator_name = operator_name;
+        this.operator_symbol = operator_names2symbols[operator_name];
+        this.a_digits  = a_digits;
+        this.b_digits  = b_digits;
+        this.username  = username;
+
+        // set range for question
+        let a_min = Math.pow(10,this.a_digits - 1) + 1;
+        let a_max = Math.pow(10,this.a_digits) - 1;
+        let b_min = Math.pow(10,this.b_digits - 1) + 1;
+        let b_max = Math.pow(10,this.b_digits) - 1;
+
+        if (this.operator_name == "division") {
+
+            this.a = getRandomInt(a_min, a_max);
+            this.b = getRandomInt(b_min, b_max);
+            
+
+            // calculate answer
+            this.quotient = Math.floor(this.a/this.b);
+            this.remainder = this.a % this.b;
+            this.answer = [this.quotient, this.remainder]
+
+            this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
+
+        } else if (this.operator_name == "percent") {
+            // randomly generate operands
+            this.a = getRandomInt(a_min, a_max);
+            this.b = getRandomInt(b_min, b_max);
+            this.question = `${this.a} % of ${this.b}`;
+
+            // calculate answer
+            this.answer = (this.a * this.b) / 100;
+        } else {
+
+            // randomly generate operands
+            this.a = getRandomInt(a_min, a_max);
+            this.b = getRandomInt(b_min, b_max);
+            this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
+
+            // calculate answer
+            this.answer = operations[this.operator_name](this.a,this.b);
+        } 
     }
-
-    // start time
-    this.start = new Date().getTime()
-
-    this.operator_name = operator_name;
-    this.operator_symbol = operator_names2symbols[operator_name];
-    this.a_digits  = a_digits;
-    this.b_digits  = b_digits;
-    this.username  = username;
-
-    // set range for question
-    let a_min = Math.pow(10,this.a_digits - 1) + 1;
-    let a_max = Math.pow(10,this.a_digits) - 1;
-    let b_min = Math.pow(10,this.b_digits - 1) + 1;
-    let b_max = Math.pow(10,this.b_digits) - 1;
-
-    if (this.operator_name == "division") {
-
-        this.a = getRandomInt(a_min, a_max);
-        this.b = getRandomInt(b_min, b_max);
-        
-
-        // calculate answer
-        this.quotient = Math.floor(this.a/this.b);
-        this.remainder = this.a % this.b;
-        this.answer = [this.quotient, this.remainder]
-
-        this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
-
-    } else {
-        // randomly generate operands
-        this.a = getRandomInt(a_min, a_max);
-        this.b = getRandomInt(b_min, b_max);
-        this.question = `${this.a} ${this.operator_symbol} ${this.b}`;
-
-        // calculate answer
-        this.answer = operations[this.operator_name](this.a,this.b);
-        }
-    }
+    
 
     // add answer
     setUserAnswer(user_answer, quotient, remainder) {
