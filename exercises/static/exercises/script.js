@@ -457,7 +457,8 @@ newQuestionButton.addEventListener("click",function(){
     question.innerHTML = current_question.question;
     
     if (settings.elements['readAloud'].checked){
-        var utterThis = new SpeechSynthesisUtterance(question.textContent);
+        let question_text_corrected = question.textContent.replace("-", "minus");
+        var utterThis = new SpeechSynthesisUtterance(question_text_corrected);
         synth.speak(utterThis);
         if (settings.elements['speechRecognition'].checked){
             utterThis.onend = function(event) {
