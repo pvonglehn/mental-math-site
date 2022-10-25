@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "main",
+        'NAME': "mental_math_app",
         'USER': "mental_math_app",
         'PASSWORD': os.environ["DJANGO_DB_PASSWORD"],
         'HOST': os.environ["DJANGO_DB_HOST"],
