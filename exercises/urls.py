@@ -1,5 +1,4 @@
-from django.urls import path, include
-from django.conf.urls import url
+from django.urls import path, include, re_path
 from . import views
 from rest_framework import routers
 from . import views
@@ -18,6 +17,6 @@ urlpatterns = [
     path('submit_targets', views.submit_targets, name='submit_targets'),
     path('statistics', views.statistics, name='statistics'),
     path('get_daily_stats', views.get_daily_stats, name='get_daily_stats'),     
-    url(r'^signup/$', views.signup, name='signup'),
+    re_path(r'^signup/$', views.signup, name='signup'),
 ]
     
